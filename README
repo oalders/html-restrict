@@ -1,0 +1,72 @@
+HTML-Restrict
+
+This module uses HTML::Parser to strip HTML from text in a restrictive manner.
+By default all HTML is restricted.  You may alter the default behaviour by
+supplying your own tag rules.
+
+For example.
+
+	use HTML::Restrict;
+
+	my $hr = HTML::Restrict->new();
+
+	# use default rules to start with (strip away all HTML)
+	my $processed = $hr->process('<b>i am bold</b>');
+
+	# $processed now equals: i am bold
+
+Now, a less restrictive example:
+
+	use HTML::Restrict;
+
+	my $hr = HTML::Restrict->new();
+	$hr->set_rules({
+		b   => [],
+		img => [qw( src alt / )]
+	});
+
+	my $html = q[<body><b>hello</b> <img src="pic.jpg" alt="me" id="test" /></body>];
+	my $processed = $hr->process( $html );
+
+	# $processed now equals: <b>hello</b> <img src="pic.jpg" alt="me" />
+
+INSTALLATION
+
+To install this module, run the following commands:
+
+	perl Build.PL
+	./Build
+	./Build test
+	./Build install
+
+SUPPORT AND DOCUMENTATION
+
+After installing, you can find documentation for this module with the
+perldoc command.
+
+    perldoc HTML::Restrict
+
+You can also look for information at:
+
+    RT, CPAN's request tracker
+        http://rt.cpan.org/NoAuth/Bugs.html?Dist=HTML-Restrict
+
+    AnnoCPAN, Annotated CPAN documentation
+        http://annocpan.org/dist/HTML-Restrict
+
+    CPAN Ratings
+        http://cpanratings.perl.org/d/HTML-Restrict
+
+    Search CPAN
+        http://search.cpan.org/dist/HTML-Restrict/
+
+
+COPYRIGHT AND LICENCE
+
+Copyright (C) 2009 Olaf Alders
+
+This program is free software; you can redistribute it and/or modify it
+under the terms of either: the GNU General Public License as published
+by the Free Software Foundation; or the Artistic License.
+
+See http://dev.perl.org/licenses/ for more information.
