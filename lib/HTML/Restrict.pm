@@ -24,7 +24,7 @@ has 'rules' => (
 );
 
 has 'parser' => (
-    is          => 'ro',
+    is          => 'rw',
     lazy        => 1,
     builder     => '_build_parser',
 );
@@ -47,14 +47,7 @@ Version 0.01
 
 our $VERSION = '0.01';
 
-
 =head1 SYNOPSIS
-
-This module uses HTML::Parser to strip HTML from text in a restrictive manner.
-By default all HTML is restricted.  You may alter the default behaviour by
-supplying your own tag rules.
-
-For example.
 
     use HTML::Restrict;
 
@@ -65,7 +58,9 @@ For example.
 
     # $processed now equals: i am bold
 
-Now, a less restrictive example:
+    ##########################################################################
+    # Now, a less restrictive example:
+    ##########################################################################
 
     use HTML::Restrict;
 
@@ -79,6 +74,22 @@ Now, a less restrictive example:
     my $processed = $hr->process( $html );
 
     # $processed now equals: <b>hello</b> <img src="pic.jpg" alt="me" />
+
+=head2 DESCRIPTION
+
+This module uses HTML::Parser to strip HTML from text in a restrictive manner.
+By default all HTML is restricted.  You may alter the default behaviour by
+supplying your own tag rules.
+
+Repository: L<http://github.com/oalders/html-restrict>
+
+=head2 MOTIVATION
+
+There are already several modules on the CPAN which accomplish much of the
+same thing, but after doing a lot of poking around, I was unable to find a
+solution with a simple setup which I was happy with.  My aim here is to keep
+things easy and, hopefully, cover a lot of the less complex use cases with
+just a few lines of code.
 
 =head1 SUBROUTINES/METHODS
 
@@ -146,12 +157,19 @@ about element order you don't need to pay any attention to this, but you
 should be aware that your elements are being reconstructed rather than just
 stripped down.
 
+=head2 parser
+
+Returns the HTML::Parser object. Keep in mind that handlers are already in
+place for "start", "end" and "text".  Clobber at your own risk.  You should
+also keep in mind that the parser object is rebuilt *after* after each rule
+change.  So, if you intend to mess around with it, you'd be advised to do so
+after calling set_rules().
+
 =cut
 
 sub _build_parser {
 
     my $self    = shift;
-    print "*************** building parser\n" if $self->debug;
     return HTML::Parser->new(
 
         start_h => [
@@ -220,6 +238,11 @@ sub process {
 
 }
 
+=head1 SEE ALSO
+
+I<HTML::Defang>, I<HTML::Declaw>, I<HTML::StripScripts>, I<HTML::Detoxifier>, I<HTML::Sanitizer>, I<HTML::Scrubber>
+
+
 =head1 AUTHOR
 
 Olaf Alders, C<< <olaf at wundercounter.com> >>
@@ -265,6 +288,8 @@ L<http://search.cpan.org/dist/HTML-Restrict/>
 
 =head1 ACKNOWLEDGEMENTS
 
+Thanks to Raybec Communications L<http://www.raybec.com> for funding my
+work on this module and for releasing it to the world.
 
 =head1 LICENSE AND COPYRIGHT
 
