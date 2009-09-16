@@ -11,7 +11,7 @@ my $builder = Module::Build->new(
         'Data::Dump'                => 0,
         'HTML::Parser'              => 0,
         'MooseX::Params::Validate'  => 0,
-        'Perl6::Junction'           => 0
+        'Perl6::Junction'           => 0,
         'Scalar::Util'              => 0,
         'Test::More'                => 0,
     },
