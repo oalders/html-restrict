@@ -10,6 +10,7 @@ my $builder = Module::Build->new(
     build_requires => {
         'Data::Dump'                => 0,
         'HTML::Parser'              => 0,
+        'Moose'                     => 0,
         'MooseX::Params::Validate'  => 0,
         'Perl6::Junction'           => 0,
         'Scalar::Util'              => 0,

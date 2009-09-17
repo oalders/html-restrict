@@ -1,6 +1,6 @@
 #!perl -T
 
-use Test::More tests => 12;
+use Test::More tests => 15;
 
 use strict;
 use warnings;
@@ -58,3 +58,28 @@ cmp_ok(
 
 $hr->set_rules( {} );
 cmp_ok( $hr->process( $bold ), 'eq', 'i am bold', "back to default rules" );
+
+cmp_ok(
+    $hr->process("<!-- comment this -->ok"), 'eq', 'ok',
+    "comments are stripped"
+);
+
+cmp_ok(
+    $hr->process(
+        q{<script type="text/javascript" src="/js/jquery-1.3.2.js"></script>ok}
+    ),
+    'eq',
+    'ok',
+    "javascript includes are stripped"
+);
+
+cmp_ok(
+    $hr->process(
+        q{<link href="/style.css" media="screen" rel="stylesheet" type="text/css" />ok}
+    ),
+    'eq',
+    'ok',
+    "css includes are stripped"
+);
+
+<link href="/style.css" media="screen" rel="stylesheet" type="text/css" />

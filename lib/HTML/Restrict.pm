@@ -37,7 +37,7 @@ has '_processed' => (
 
 =head1 NAME
 
-HTML::Restrict - Strip away unwanted HTML tags
+Strip unwanted HTML tags and attributes (beta)
 
 =head1 VERSION
 
@@ -48,6 +48,8 @@ Version 0.01
 our $VERSION = '0.01';
 
 =head1 SYNOPSIS
+
+This is a beta release.
 
     use HTML::Restrict;
 
@@ -80,16 +82,6 @@ our $VERSION = '0.01';
 This module uses HTML::Parser to strip HTML from text in a restrictive manner.
 By default all HTML is restricted.  You may alter the default behaviour by
 supplying your own tag rules.
-
-Repository: L<http://github.com/oalders/html-restrict>
-
-=head2 MOTIVATION
-
-There are already several modules on the CPAN which accomplish much of the
-same thing, but after doing a lot of poking around, I was unable to find a
-solution with a simple setup which I was happy with.  My aim here is to keep
-things easy and, hopefully, cover a lot of the less complex use cases with
-just a few lines of code.
 
 =head1 SUBROUTINES/METHODS
 
@@ -181,12 +173,12 @@ sub _build_parser {
                 if ( any( keys %{ $self->get_rules } ) eq $tagname  ) {
                     print dump $attr if $self->debug;
                     foreach my $attribute ( @{ $self->get_rules->{$tagname} } ) {
-                        if ( $attr->{$attribute} && $attribute ne q{/} ) {
+                        if ( exists $attr->{$attribute} && $attribute ne q{/} ) {
                             $more .= qq[ $attribute="$attr->{$attribute}" ];
                         }
                     }
 
-                    # closing slash should (naturally) closing the tag
+                    # closing slash should (naturally) close the tag
                     if ( exists $attr->{q{/}} && $attr->{q{/}} eq q{/} ) {
                         $more .= ' /';
                     }
@@ -226,7 +218,7 @@ sub _build_parser {
 
 sub process {
 
-    my $self = shift;
+    my $self        = shift;
     my ( $content ) = pos_validated_list( \@_, { type => 'Str' }, );
     $self->_clear_processed;
 
@@ -238,14 +230,32 @@ sub process {
 
 }
 
+
+=head2 MOTIVATION
+
+There are already several modules on the CPAN which accomplish much of the
+same thing, but after doing a lot of poking around, I was unable to find a
+solution with a simple setup which I was happy with.  My aim here is to keep
+things easy and, hopefully, cover a lot of the less complex use cases with
+just a few lines of code.
+
+The most common use case might be stripping HTML from user submitted data, so
+that you can display it on your pages without having issues with layout, cross
+site scripting etc.  In many cases you'll want to eliminate all HTML or just
+just allow a few tags like bold, italics etc.  This module will get you there
+pretty quickly.
+
+
 =head1 SEE ALSO
 
-I<HTML::Defang>, I<HTML::Declaw>, I<HTML::StripScripts>, I<HTML::Detoxifier>, I<HTML::Sanitizer>, I<HTML::Scrubber>
+I<HTML::Defang>, I<HTML::Declaw>, I<HTML::StripScripts>, I<HTML::Detoxifier>,
+I<HTML::Sanitizer>, I<HTML::Scrubber>
 
 
 =head1 AUTHOR
 
 Olaf Alders, C<< <olaf at wundercounter.com> >>
+
 
 =head1 BUGS AND LIMITATIONS
 
@@ -266,6 +276,10 @@ You can find documentation for this module with the perldoc command.
 You can also look for information at:
 
 =over 4
+
+=item * GitHub Source Repository
+
+L<http://github.com/oalders/html-restrict>
 
 =item * RT: CPAN's request tracker
 
@@ -290,6 +304,7 @@ L<http://search.cpan.org/dist/HTML-Restrict/>
 
 Thanks to Raybec Communications L<http://www.raybec.com> for funding my
 work on this module and for releasing it to the world.
+
 
 =head1 LICENSE AND COPYRIGHT
 
