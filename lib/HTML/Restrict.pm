@@ -43,7 +43,7 @@ has '_processed' => (
 
 =head1 NAME
 
-Strip unwanted HTML tags and attributes (beta)
+HTML::Restrict - Strip unwanted HTML tags and attributes (beta)
 
 =head1 VERSION
 
