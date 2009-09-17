@@ -29,6 +29,12 @@ has 'parser' => (
     builder     => '_build_parser',
 );
 
+has 'trim' => (
+    is          => 'rw',
+    isa         => 'Bool',
+    default     => 1,
+);
+
 has '_processed' => (
     is          => 'rw',
     isa         => 'Str',
@@ -149,6 +155,13 @@ about element order you don't need to pay any attention to this, but you
 should be aware that your elements are being reconstructed rather than just
 stripped down.
 
+
+=head2 trim( 0|1 )
+
+By default all leading and trailing spaces will be removed when text is
+processed.  Set this value to 0 in order to disable this behaviour.
+
+
 =head2 parser
 
 Returns the HTML::Parser object. Keep in mind that handlers are already in
@@ -226,6 +239,14 @@ sub process {
     $parser->parse( $content );
     $parser->eof;
 
+    my $text = $self->_processed;
+
+    if ( $self->trim ) {
+        $text =~ s{\A\s*}{}gxms;
+        $text =~ s{\s*\z}{}gxms;
+    }
+    $self->_processed( $text );
+
     return $self->_processed;
 
 }
@@ -235,21 +256,24 @@ sub process {
 
 There are already several modules on the CPAN which accomplish much of the
 same thing, but after doing a lot of poking around, I was unable to find a
-solution with a simple setup which I was happy with.  My aim here is to keep
-things easy and, hopefully, cover a lot of the less complex use cases with
-just a few lines of code.
+solution with a simple setup which I was happy with.
 
-The most common use case might be stripping HTML from user submitted data, so
-that you can display it on your pages without having issues with layout, cross
-site scripting etc.  In many cases you'll want to eliminate all HTML or just
-just allow a few tags like bold, italics etc.  This module will get you there
-pretty quickly.
+The most common use case might be stripping HTML from user submitted data
+completely or allowing just a few tags and attributes to be displayed.  This
+module doesn't do any validation on the actual content of the tags or
+attributes.  If this is a requirement, you can either mess with the
+parser object, post-process the text yourself or have a look at one of the
+more feature-rich modules in the SEE ALSO section below.
+
+My aim here is to keep things easy and, hopefully, cover a lot of the less
+complex use cases with just a few lines of code and some brief documentation.
+The idea is to be up and running quickly.
 
 
 =head1 SEE ALSO
 
-I<HTML::Defang>, I<HTML::Declaw>, I<HTML::StripScripts>, I<HTML::Detoxifier>,
-I<HTML::Sanitizer>, I<HTML::Scrubber>
+I<HTML::TagFilter>, I<HTML::Defang>, I<HTML::Declaw>, I<HTML::StripScripts>,
+I<HTML::Detoxifier>, I<HTML::Sanitizer>, I<HTML::Scrubber>
 
 
 =head1 AUTHOR

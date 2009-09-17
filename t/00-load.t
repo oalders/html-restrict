@@ -1,6 +1,6 @@
 #!perl -T
 
-use Test::More tests => 15;
+use Test::More tests => 18;
 
 use strict;
 use warnings;
@@ -82,4 +82,12 @@ cmp_ok(
     "css includes are stripped"
 );
 
-<link href="/style.css" media="screen" rel="stylesheet" type="text/css" />
+ok( $hr->trim, "trim enabled by default");
+
+cmp_ok(
+    $hr->process("   ok   "), 'eq', 'ok', "leading and trailing spaces trimmed"
+);
+
+cmp_ok(
+    $hr->process("<div>ok</div>"), 'eq', 'ok', "divs are stripped away"
+);
