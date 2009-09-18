@@ -24,7 +24,7 @@ has 'rules' => (
 );
 
 has 'parser' => (
-    is          => 'rw',
+    is          => 'ro',
     lazy        => 1,
     builder     => '_build_parser',
 );
@@ -47,13 +47,17 @@ HTML::Restrict - Strip unwanted HTML tags and attributes (beta)
 
 =head1 VERSION
 
-Version 0.01
+Version 0.02
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 =head1 SYNOPSIS
+
+This module uses I<HTML::Parser> to strip HTML from text in a restrictive manner.
+By default all HTML is restricted.  You may alter the default behaviour by
+supplying your own tag rules.
 
 This is a beta release.
 
@@ -83,55 +87,76 @@ This is a beta release.
 
     # $processed now equals: <b>hello</b> <img src="pic.jpg" alt="me" />
 
-=head2 DESCRIPTION
+=head1 CONSTRUCTOR AND STARTUP
 
-This module uses HTML::Parser to strip HTML from text in a restrictive manner.
-By default all HTML is restricted.  You may alter the default behaviour by
-supplying your own tag rules.
+=head2 new()
 
-=head1 SUBROUTINES/METHODS
+Creates and returns a new HTML::Restrict object.
 
-=head2 process( "<html>...</html>" )
+    my $hr = HTML::Restrict->new()
 
-This is the method which does the real work.  It parses your data, removes any
-tags and attributes which are not specifically allowed and returns the
-resulting text.  Requires and returns a SCALAR.
+HTML::Restrict doesn't require any params to be passed to new.  If your goal
+is to remove all HTML from text, then no further setup is required.  Just
+pass your text to the process() method and you're done:
 
-=head2 get_rules
+    my $plain_text = $hr->process( $html );
 
-An accessor method, which returns a HASHREF of allowed tags and their
-allowed attributes.  Returns an empty HASHREF by default.
+If you need to set up specific rules, have a look at the params which
+HTML::Restrict recognizes:
 
-=head2 set_rules( { a => [], img => [qw( src alt ), ...] })
+=over 4
 
-Sets the rules which will be used to process your data.  By default all HTML
-tags are off limits.  Use this method to define the HTML elements and
-corresponding attributes you'd like to use.
+=item * C<< rules => \%rules >>
 
-Please note that set_rules is a mutator method, so your changes are not
-cumulative.  The last rules passed to the set_rules method are the rules which
-will be applied to your data when it is processed.
+Rules should be passed as a HASHREF of allowed tags.  Each hash value should
+represent the allowed attributes for the listed tag.  For example, if you want
+to allow a fair amount of HTML, you can try something like this:
 
-For example:
+    my %rules = (
+        a       => [qw( href target )],
+        b       => [],
+        caption => [],
+        center  => [],
+        em      => [],
+        i       => [],
+        img     => [qw( alt border height width src style / )],
+        li      => [],
+        ol      => [],
+        p       => [qw(style)],
+        span    => [qw(style)],
+        strong  => [],
+        sub     => [],
+        sup     => [],
+        table   => [qw( style border cellspacing cellpadding align )],
+        tbody   => [],
+        td      => [],
+        tr      => [],
+        u       => [],
+        ul      => [],
+    );
 
-    # allow only b (bold) tags
-    $hr->set_rules({ b => [] })
+    my $hr = HTML::Restrict->new( rules => \%rules )
 
-    # return to defaults (no HTML allowed)
-    $hr->set_rules({});
+Or, to allow only bolded text:
 
-    # all b tags plus images
-    # allow some image attributes as well
-    $hr->set_rules({ b => [], img => [qw( src alt width height border / )]});
+    my $hr = HTML::Restrict->new( rules => { b => [] } );
 
-Since HTML::Parser treats a closing slash as an attribute, you'll need to add
+Allow bolded text, images and some (but not all) image attributes:
+
+    my %rules = (
+        b   => [ ],
+        img => [qw( src alt width height border / )
+    );
+    my $hr = HTML::Restrict->new( rules => \%rules );
+
+Since I<HTML::Parser> treats a closing slash as an attribute, you'll need to add
 "/" to your list of allowed attributes if you'd like your tags to retain
 closing slashes.  For example:
 
-    $hr->set_rules({ hr => [] });
+    my $hr = HTML::Restrict->new( rules =>{ hr => [] } );
     $hr->process( "<hr />"); # returns: <hr>
 
-    $hr->set_rules({ hr => [qw( / )] });
+    my $hr = HTML::Restrict->new( rules =>{ hr => [qw( / )] } );
     $hr->process( "<hr />"); # returns: <hr />
 
 HTML::Restrict strips away any tags and attributes which are not explicitly
@@ -140,11 +165,11 @@ attributes in the order in which they appear in your rules.
 
 So, if you define the following rules:
 
-    $hr->set_rules({
+    my %rules = (
         ...
         img => [qw( src alt title width height id / )]
         ...
-    })
+    );
 
 then your image tags will all be built like this:
 
@@ -155,20 +180,56 @@ about element order you don't need to pay any attention to this, but you
 should be aware that your elements are being reconstructed rather than just
 stripped down.
 
+=item * C<< trim => [0|1] >>
+
+By default all leading and trailing spaces will be removed when text is
+processed.  Set this value to 0 in order to disable this behaviour.
+
+=back
+
+=head1 SUBROUTINES/METHODS
+
+=head2 process( $html )
+
+This is the method which does the real work.  It parses your data, removes any
+tags and attributes which are not specifically allowed and returns the
+resulting text.  Requires and returns a SCALAR.
+
+=head2 get_rules
+
+An accessor method, which returns a HASHREF of allowed tags and their
+allowed attributes.  Returns an empty HASHREF by default, since the default
+behaviour is to disallow all HTML.
+
+=head2 set_rules( \%rules )
+
+Sets the rules which will be used to process your data.  By default all HTML
+tags are off limits.  Use this method to define the HTML elements and
+corresponding attributes you'd like to use.
+
+If you only need to set rules once, you might want to pass them to the new()
+method when constructing the object, but you may also set your rules using
+set_rules().  If you want to apply different rules to different data without
+creating a new object each time, set_rules() will handle changing the object's
+behaviour for you.
+
+Please note that set_rules is a mutator method, so your changes are not
+cumulative.  The last rules passed to the set_rules method are the rules which
+will be applied to your data when it is processed.
+
+For example:
+
+    # create object which allows only a and img tags
+    my $hr = HTML::Restrict->new( rules => { a => [ ...], img => [ ... ] } );
+
+    # return to defaults (no HTML allowed)
+    $hr->set_rules({});
+
 
 =head2 trim( 0|1 )
 
 By default all leading and trailing spaces will be removed when text is
 processed.  Set this value to 0 in order to disable this behaviour.
-
-
-=head2 parser
-
-Returns the HTML::Parser object. Keep in mind that handlers are already in
-place for "start", "end" and "text".  Clobber at your own risk.  You should
-also keep in mind that the parser object is rebuilt *after* after each rule
-change.  So, if you intend to mess around with it, you'd be advised to do so
-after calling set_rules().
 
 =cut
 
@@ -252,7 +313,7 @@ sub process {
 }
 
 
-=head2 MOTIVATION
+=head1 MOTIVATION
 
 There are already several modules on the CPAN which accomplish much of the
 same thing, but after doing a lot of poking around, I was unable to find a

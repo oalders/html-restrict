@@ -1,4 +1,8 @@
 Revision history for HTML-Restrict
 
+0.02    2009-09-17
+        Improved documentation layout and clarity
+        Removed documentation for parser() method -- seems like a bad idea
+
 0.01    2009-09-17
         Beta release
