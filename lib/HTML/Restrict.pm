@@ -8,37 +8,37 @@ use MooseX::Params::Validate;
 use Perl6::Junction qw( any );
 
 has 'debug' => (
-    is          => 'rw',
-    isa         => 'Bool',
-    default     => 0,
+    is      => 'rw',
+    isa     => 'Bool',
+    default => 0,
 );
 
 has 'rules' => (
-    is          => 'rw',
-    isa         => 'HashRef',
-    required    => 0,
-    default     => sub { {} },
-    trigger     => \&_build_parser,
-    reader      => 'get_rules',
-    writer      => 'set_rules',
+    is       => 'rw',
+    isa      => 'HashRef',
+    required => 0,
+    default  => sub { {} },
+    trigger  => \&_build_parser,
+    reader   => 'get_rules',
+    writer   => 'set_rules',
 );
 
 has 'parser' => (
-    is          => 'ro',
-    lazy        => 1,
-    builder     => '_build_parser',
+    is      => 'ro',
+    lazy    => 1,
+    builder => '_build_parser',
 );
 
 has 'trim' => (
-    is          => 'rw',
-    isa         => 'Bool',
-    default     => 1,
+    is      => 'rw',
+    isa     => 'Bool',
+    default => 1,
 );
 
 has '_processed' => (
-    is          => 'rw',
-    isa         => 'Str',
-    clearer     => '_clear_processed',
+    is      => 'rw',
+    isa     => 'Str',
+    clearer => '_clear_processed',
 );
 
 =head1 NAME
@@ -235,7 +235,7 @@ processed.  Set this value to 0 in order to disable this behaviour.
 
 sub _build_parser {
 
-    my $self    = shift;
+    my $self = shift;
     return HTML::Parser->new(
 
         start_h => [
@@ -244,10 +244,14 @@ sub _build_parser {
                 print "name:  $tagname", "\n" if $self->debug;
 
                 my $more = q{};
-                if ( any( keys %{ $self->get_rules } ) eq $tagname  ) {
+                if ( any( keys %{ $self->get_rules } ) eq $tagname ) {
                     print dump $attr if $self->debug;
-                    foreach my $attribute ( @{ $self->get_rules->{$tagname} } ) {
-                        if ( exists $attr->{$attribute} && $attribute ne q{/} ) {
+                    foreach
+                        my $attribute ( @{ $self->get_rules->{$tagname} } )
+                    {
+                        if ( exists $attr->{$attribute}
+                            && $attribute ne q{/} )
+                        {
                             $more .= qq[ $attribute="$attr->{$attribute}" ];
                         }
                     }
@@ -270,7 +274,7 @@ sub _build_parser {
         end_h => [
             sub {
                 my ( $p, $tagname, $attr, $text ) = @_;
-                if ( any( keys %{ $self->get_rules } ) eq $tagname  ) {
+                if ( any( keys %{ $self->get_rules } ) eq $tagname ) {
                     print "text: $text" if $self->debug;
                     $self->_processed( ( $self->_processed || q{} ) . $text );
                 }
@@ -278,7 +282,7 @@ sub _build_parser {
             "self,tagname,attr,text"
         ],
 
-        text_h =>  [
+        text_h => [
             sub {
                 my ( $p, $text ) = @_;
                 print "$text\n" if $self->debug;
@@ -292,11 +296,11 @@ sub _build_parser {
 
 sub process {
 
-    my $self        = shift;
-    
+    my $self = shift;
+
     # returns undef if no value was passed
     return undef if !@_;
-    
+
     my ( $content ) = pos_validated_list( \@_, { type => 'Str' }, );
     $self->_clear_processed;
 
@@ -315,7 +319,6 @@ sub process {
     return $self->_processed;
 
 }
-
 
 =head1 MOTIVATION
 
@@ -394,6 +397,8 @@ L<http://search.cpan.org/dist/HTML-Restrict/>
 Thanks to Raybec Communications L<http://www.raybec.com> for funding my
 work on this module and for releasing it to the world.
 
+Thanks also to Mark Jubenville (ioncache) for contributing patches.
+
 
 =head1 LICENSE AND COPYRIGHT
 
@@ -408,4 +413,4 @@ See http://dev.perl.org/licenses/ for more information.
 
 =cut
 
-1; # End of HTML::Restrict
+1;    # End of HTML::Restrict

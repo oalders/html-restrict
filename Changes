@@ -1,7 +1,8 @@
 Revision history for HTML-Restrict
 
 0.03    2009-11-17
-        
+        process() no longer dies when passed an undef -- patch provided by
+        Mark Jubenville (ioncache)
 
 0.02    2009-09-17
         Improved documentation layout and clarity
