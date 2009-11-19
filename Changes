@@ -1,5 +1,9 @@
 Revision history for HTML-Restrict
 
+0.04    2009-11-19
+        MooseX::Params::Validate 0.12 now required.  Some earlier versions do
+        not include pos_validated_list()
+
 0.03    2009-11-17
         process() no longer dies when passed an undef -- patch provided by
         Mark Jubenville (ioncache)
