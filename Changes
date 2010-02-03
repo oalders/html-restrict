@@ -1,5 +1,9 @@
 Revision history for HTML-Restrict
 
+0.05    2010-02-03
+        process( undef ) returns without attempting to do anything.  Avoids
+        warnings about uninitialized vars.
+
 0.04    2009-11-19
         MooseX::Params::Validate 0.12 now required.  Some earlier versions do
         not include pos_validated_list()

@@ -47,11 +47,11 @@ HTML::Restrict - Strip unwanted HTML tags and attributes (beta)
 
 =head1 VERSION
 
-Version 0.04
+Version 0.05
 
 =cut
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 =head1 SYNOPSIS
 
@@ -299,7 +299,7 @@ sub process {
     my $self = shift;
 
     # returns undef if no value was passed
-    return undef if !@_ || !$_[0];
+    return if !@_ || !$_[0];
 
     my ( $content ) = pos_validated_list( \@_, { type => 'Str' }, );
     $self->_clear_processed;
