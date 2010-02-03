@@ -299,7 +299,7 @@ sub process {
     my $self = shift;
 
     # returns undef if no value was passed
-    return undef if !@_;
+    return undef if !@_ || !$_[0];
 
     my ( $content ) = pos_validated_list( \@_, { type => 'Str' }, );
     $self->_clear_processed;
