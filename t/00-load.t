@@ -1,6 +1,6 @@
 #!perl -T
 
-use Test::More tests => 19;
+use Test::More tests => 22;
 
 use strict;
 use warnings;
@@ -99,3 +99,12 @@ cmp_ok( $hr->process( "<div>ok</div>" ),
 
 # undef should be returned when no value is passed to the process method
 is( $hr->process(), undef, "undef is returned when no value passed" );
+
+
+# start fresh
+# RT #55775
+$hr = HTML::Restrict->new;
+
+cmp_ok( $hr->process( 0 ), 'eq', '0', "untrue values not processed");
+cmp_ok( $hr->process( '0' ), 'eq', '0', "untrue values not processed");
+cmp_ok( $hr->process( '000' ), 'eq', '000', "untrue values not processed");

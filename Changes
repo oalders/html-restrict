@@ -1,20 +1,24 @@
 Revision history for HTML-Restrict
 
+0.06    2010-03-22
+        - Fixed RT #55775 "Strings equating to boolean false returned as undef"
+            (Duncan Forsyth)
+
 0.05    2010-02-03
-        process( undef ) returns without attempting to do anything.  Avoids
-        warnings about uninitialized vars.
+        - process( undef ) returns without attempting to do anything.  Avoids
+            warnings about uninitialized vars.
 
 0.04    2009-11-19
-        MooseX::Params::Validate 0.12 now required.  Some earlier versions do
-        not include pos_validated_list()
+        - MooseX::Params::Validate 0.12 now required.  Some earlier versions do
+            not include pos_validated_list()
 
 0.03    2009-11-17
-        process() no longer dies when passed an undef -- patch provided by
-        Mark Jubenville (ioncache)
+        - process() no longer dies when passed an undef -- patch provided by
+            Mark Jubenville (ioncache)
 
 0.02    2009-09-17
-        Improved documentation layout and clarity
-        Removed documentation for parser() method -- seems like a bad idea
+        - Improved documentation layout and clarity
+            Removed documentation for parser() method -- seems like a bad idea
 
 0.01    2009-09-17
-        Beta release
+        - Beta release

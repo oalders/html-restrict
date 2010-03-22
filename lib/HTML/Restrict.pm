@@ -47,11 +47,11 @@ HTML::Restrict - Strip unwanted HTML tags and attributes (beta)
 
 =head1 VERSION
 
-Version 0.05
+Version 0.06
 
 =cut
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 =head1 SYNOPSIS
 
@@ -299,7 +299,8 @@ sub process {
     my $self = shift;
 
     # returns undef if no value was passed
-    return if !@_ || !$_[0];
+    return if !@_;
+    return $_[0] if !$_[0];
 
     my ( $content ) = pos_validated_list( \@_, { type => 'Str' }, );
     $self->_clear_processed;
@@ -397,7 +398,11 @@ L<http://search.cpan.org/dist/HTML-Restrict/>
 Thanks to Raybec Communications L<http://www.raybec.com> for funding my
 work on this module and for releasing it to the world.
 
-Thanks also to Mark Jubenville (ioncache) for contributing patches.
+Thanks also to the following for patches and bug reports:
+
+Mark Jubenville (ioncache)
+
+Duncan Forsyth
 
 
 =head1 LICENSE AND COPYRIGHT
