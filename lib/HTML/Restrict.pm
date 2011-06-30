@@ -41,13 +41,99 @@ has '_processed' => (
     clearer => '_clear_processed',
 );
 
-=head1 NAME
+sub _build_parser {
 
-HTML::Restrict - Strip unwanted HTML tags and attributes
+    my $self = shift;
+    return HTML::Parser->new(
 
-=head1 VERSION
+        start_h => [
+            sub {
+                my ( $p, $tagname, $attr, $text ) = @_;
+                print "name:  $tagname", "\n" if $self->debug;
 
-Version 1.0.0
+                my $more = q{};
+                if ( any( keys %{ $self->get_rules } ) eq $tagname ) {
+                    print dump $attr if $self->debug;
+                    foreach
+                        my $attribute ( @{ $self->get_rules->{$tagname} } )
+                    {
+                        if ( exists $attr->{$attribute}
+                            && $attribute ne q{/} )
+                        {
+                            $more .= qq[ $attribute="$attr->{$attribute}" ];
+                        }
+                    }
+
+                    # closing slash should (naturally) close the tag
+                    if ( exists $attr->{q{/}} && $attr->{q{/}} eq q{/} ) {
+                        $more .= ' /';
+                    }
+
+                    my $elem = "<$tagname $more>";
+                    $elem =~ s{\s*>}{>}gxms;
+                    $elem =~ s{\s+}{ }gxms;
+
+                    $self->_processed( ( $self->_processed || q{} ) . $elem );
+                }
+            },
+            "self,tagname,attr,text"
+        ],
+
+        end_h => [
+            sub {
+                my ( $p, $tagname, $attr, $text ) = @_;
+                if ( any( keys %{ $self->get_rules } ) eq $tagname ) {
+                    print "text: $text" if $self->debug;
+                    $self->_processed( ( $self->_processed || q{} ) . $text );
+                }
+            },
+            "self,tagname,attr,text"
+        ],
+
+        text_h => [
+            sub {
+                my ( $p, $text ) = @_;
+                print "$text\n" if $self->debug;
+                $self->_processed( ( $self->_processed || q{} ) . $text );
+            },
+            "self,text"
+        ],
+    );
+
+}
+
+sub process {
+
+    my $self = shift;
+
+    # returns undef if no value was passed
+    return if !@_;
+    return $_[0] if !$_[0];
+
+    my ( $content ) = pos_validated_list( \@_, { type => 'Str' }, );
+    $self->_clear_processed;
+
+    my $parser = $self->parser;
+    $parser->parse( $content );
+    $parser->eof;
+
+    my $text = $self->_processed;
+
+    if ( $self->trim ) {
+        $text =~ s{\A\s*}{}gxms;
+        $text =~ s{\s*\z}{}gxms;
+    }
+    $self->_processed( $text );
+
+    return $self->_processed;
+
+}
+
+1;    # End of HTML::Restrict
+
+# ABSTRACT: Strip unwanted HTML tags and attributes
+
+=pod
 
 =head1 SYNOPSIS
 
@@ -225,98 +311,6 @@ For example:
 By default all leading and trailing spaces will be removed when text is
 processed.  Set this value to 0 in order to disable this behaviour.
 
-=cut
-
-sub _build_parser {
-
-    my $self = shift;
-    return HTML::Parser->new(
-
-        start_h => [
-            sub {
-                my ( $p, $tagname, $attr, $text ) = @_;
-                print "name:  $tagname", "\n" if $self->debug;
-
-                my $more = q{};
-                if ( any( keys %{ $self->get_rules } ) eq $tagname ) {
-                    print dump $attr if $self->debug;
-                    foreach
-                        my $attribute ( @{ $self->get_rules->{$tagname} } )
-                    {
-                        if ( exists $attr->{$attribute}
-                            && $attribute ne q{/} )
-                        {
-                            $more .= qq[ $attribute="$attr->{$attribute}" ];
-                        }
-                    }
-
-                    # closing slash should (naturally) close the tag
-                    if ( exists $attr->{q{/}} && $attr->{q{/}} eq q{/} ) {
-                        $more .= ' /';
-                    }
-
-                    my $elem = "<$tagname $more>";
-                    $elem =~ s{\s*>}{>}gxms;
-                    $elem =~ s{\s+}{ }gxms;
-
-                    $self->_processed( ( $self->_processed || q{} ) . $elem );
-                }
-            },
-            "self,tagname,attr,text"
-        ],
-
-        end_h => [
-            sub {
-                my ( $p, $tagname, $attr, $text ) = @_;
-                if ( any( keys %{ $self->get_rules } ) eq $tagname ) {
-                    print "text: $text" if $self->debug;
-                    $self->_processed( ( $self->_processed || q{} ) . $text );
-                }
-            },
-            "self,tagname,attr,text"
-        ],
-
-        text_h => [
-            sub {
-                my ( $p, $text ) = @_;
-                print "$text\n" if $self->debug;
-                $self->_processed( ( $self->_processed || q{} ) . $text );
-            },
-            "self,text"
-        ],
-    );
-
-}
-
-sub process {
-
-    my $self = shift;
-
-    # returns undef if no value was passed
-    return if !@_;
-    return $_[0] if !$_[0];
-
-    my ( $content ) = pos_validated_list( \@_, { type => 'Str' }, );
-    $self->_clear_processed;
-
-    my $parser = $self->parser;
-    $parser->parse( $content );
-    $parser->eof;
-
-    my $text = $self->_processed;
-
-    if ( $self->trim ) {
-        $text =~ s{\A\s*}{}gxms;
-        $text =~ s{\s*\z}{}gxms;
-    }
-    $self->_processed( $text );
-
-    return $self->_processed;
-
-}
-
-# ABSTRACT: Strip unwanted HTML tags and attributes
-
 =head1 MOTIVATION
 
 There are already several modules on the CPAN which accomplish much of the
@@ -337,56 +331,8 @@ The idea is to be up and running quickly.
 
 =head1 SEE ALSO
 
-I<HTML::TagFilter>, I<HTML::Defang>, I<HTML::Declaw>, I<HTML::StripScripts>,
-I<HTML::Detoxifier>, I<HTML::Sanitizer>, I<HTML::Scrubber>
-
-
-=head1 AUTHOR
-
-Olaf Alders, C<< <olaf at wundercounter.com> >>
-
-
-=head1 BUGS AND LIMITATIONS
-
-Please report any bugs or feature requests to
-C<bug-html-restrict at rt.cpan.org>, or through the web interface at
-L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=HTML-Restrict>.  I will be
-notified, and then you'll automatically be notified of progress on your bug as
-I make changes.
-
-
-=head1 SUPPORT
-
-You can find documentation for this module with the perldoc command.
-
-    perldoc HTML::Restrict
-
-
-You can also look for information at:
-
-=over 4
-
-=item * GitHub Source Repository
-
-L<http://github.com/oalders/html-restrict>
-
-=item * RT: CPAN's request tracker
-
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=HTML-Restrict>
-
-=item * AnnoCPAN: Annotated CPAN documentation
-
-L<http://annocpan.org/dist/HTML-Restrict>
-
-=item * CPAN Ratings
-
-L<http://cpanratings.perl.org/d/HTML-Restrict>
-
-=item * Search CPAN
-
-L<http://search.cpan.org/dist/HTML-Restrict/>
-
-=back
+L<HTML::TagFilter>, L<HTML::Defang>, L<HTML::Declaw>, L<HTML::StripScripts>,
+L<HTML::Detoxifier>, L<HTML::Sanitizer>, L<HTML::Scrubber>
 
 
 =head1 ACKNOWLEDGEMENTS
@@ -400,18 +346,4 @@ Mark Jubenville (ioncache)
 
 Duncan Forsyth
 
-
-=head1 LICENSE AND COPYRIGHT
-
-Copyright 2009 Olaf Alders.
-
-This program is free software; you can redistribute it and/or modify it
-under the terms of either: the GNU General Public License as published
-by the Free Software Foundation; or the Artistic License.
-
-See http://dev.perl.org/licenses/ for more information.
-
-
 =cut
-
-1;    # End of HTML::Restrict
