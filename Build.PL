@@ -5,7 +5,7 @@ use Module::Build;
 my $builder = Module::Build->new(
     module_name         => 'HTML::Restrict',
     license             => 'perl',
-    dist_abstract       => 'Strip unwanted HTML tags and attributes (beta)',
+    dist_abstract       => 'Strip unwanted HTML tags and attributes',
     dist_author         => q{Olaf Alders <olaf@wundercounter.com>},
     dist_version_from   => 'lib/HTML/Restrict.pm',
     build_requires => {

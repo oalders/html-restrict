@@ -43,23 +43,21 @@ has '_processed' => (
 
 =head1 NAME
 
-HTML::Restrict - Strip unwanted HTML tags and attributes (beta)
+HTML::Restrict - Strip unwanted HTML tags and attributes
 
 =head1 VERSION
 
-Version 0.06
+Version 1.0.0
 
 =cut
 
-our $VERSION = '0.06';
+our $VERSION = '1.0.0';
 
 =head1 SYNOPSIS
 
 This module uses I<HTML::Parser> to strip HTML from text in a restrictive manner.
 By default all HTML is restricted.  You may alter the default behaviour by
 supplying your own tag rules.
-
-This is a beta release.
 
     use HTML::Restrict;
 
