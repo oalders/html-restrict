@@ -1,8 +1,0 @@
-Build.PL
-Changes
-lib/HTML/Restrict.pm
-MANIFEST
-README
-t/00-load.t
-t/pod-coverage.t
-t/pod.t

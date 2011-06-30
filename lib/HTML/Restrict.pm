@@ -49,10 +49,6 @@ HTML::Restrict - Strip unwanted HTML tags and attributes
 
 Version 1.0.0
 
-=cut
-
-our $VERSION = '1.0.0';
-
 =head1 SYNOPSIS
 
 This module uses I<HTML::Parser> to strip HTML from text in a restrictive manner.
@@ -318,6 +314,8 @@ sub process {
     return $self->_processed;
 
 }
+
+# ABSTRACT: Strip unwanted HTML tags and attributes
 
 =head1 MOTIVATION
 
