@@ -37,7 +37,7 @@ has 'trim' => (
 
 has '_processed' => (
     is      => 'rw',
-    isa     => 'Str',
+    isa     => 'Maybe[Str]',
     clearer => '_clear_processed',
 );
 
@@ -119,7 +119,7 @@ sub process {
 
     my $text = $self->_processed;
 
-    if ( $self->trim ) {
+    if ( $self->trim && $text ) {
         $text =~ s{\A\s*}{}gxms;
         $text =~ s{\s*\z}{}gxms;
     }

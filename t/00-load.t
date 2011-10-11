@@ -1,6 +1,7 @@
 #!perl -T
 
-use Test::More tests => 22;
+use Test::More tests => 24;
+use Test::NoWarnings;
 
 use strict;
 use warnings;
@@ -11,7 +12,8 @@ BEGIN {
     use_ok( 'Scalar::Util' );
 }
 
-diag( "Testing HTML::Restrict $HTML::Restrict::VERSION, Perl $], $^X" );
+my $version = $HTML::Restrict::VERSION || 'development';
+diag( "Testing HTML::Restrict $version, Perl $], $^X" );
 
 my $hr = HTML::Restrict->new( debug => 0 );
 isa_ok( $hr, 'HTML::Restrict' );
@@ -90,8 +92,8 @@ cmp_ok(
 ok( $hr->trim, "trim enabled by default" );
 
 # stripping of leading and trailing spaces
-cmp_ok( $hr->process( "   ok   " ),
-    'eq', 'ok', "leading and trailing spaces trimmed" );
+cmp_ok( $hr->process( "   ok ok ok  " ),
+    'eq', 'ok ok ok', "leading and trailing spaces trimmed" );
 
 # stripping of div tags
 cmp_ok( $hr->process( "<div>ok</div>" ),
@@ -108,3 +110,5 @@ $hr = HTML::Restrict->new;
 cmp_ok( $hr->process( 0 ), 'eq', '0', "untrue values not processed");
 cmp_ok( $hr->process( '0' ), 'eq', '0', "untrue values not processed");
 cmp_ok( $hr->process( '000' ), 'eq', '000', "untrue values not processed");
+
+ok( !$hr->process("<html>"), "process only HTML" );
