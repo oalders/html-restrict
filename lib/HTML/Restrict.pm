@@ -1,3 +1,5 @@
+use strict;
+
 package HTML::Restrict;
 
 use Moose;
