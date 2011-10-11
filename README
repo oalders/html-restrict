@@ -2,7 +2,7 @@ NAME
     HTML::Restrict - Strip unwanted HTML tags and attributes
 
 VERSION
-    version 1.0.1
+    version 1.0.2
 
 SYNOPSIS
     This module uses *HTML::Parser* to strip HTML from text in a restrictive
@@ -14,13 +14,12 @@ SYNOPSIS
         my $hr = HTML::Restrict->new();
 
         # use default rules to start with (strip away all HTML)
-        my $processed = $hr->process('<b>i am bold</b>');
+        my $processed = $hr->process('  <b>i am bold</b>  ');
 
-        # $processed now equals: i am bold
+        # $processed now equals: 'i am bold'
 
-        ##########################################################################
         # Now, a less restrictive example:
-        ##########################################################################
+        ##################################
 
         use HTML::Restrict;
 
@@ -132,6 +131,13 @@ CONSTRUCTOR AND STARTUP
         is processed. Set this value to 0 in order to disable this
         behaviour.
 
+        For example, to preserve leading and trailing whitespace:
+
+            $hr->trim( 0 );
+            my $trimmed = $hr->process('  <b>i am bold</b>  ');
+
+            # $trimmed now equals: '  i am bold  '
+
 SUBROUTINES/METHODS
   process( $html )
     This is the method which does the real work. It parses your data,
@@ -199,6 +205,8 @@ ACKNOWLEDGEMENTS
     Mark Jubenville (ioncache)
 
     Duncan Forsyth
+
+    Rick Moore
 
 AUTHOR
     Olaf Alders <olaf@wundercounter.com>
