@@ -266,13 +266,6 @@ stripped down.
 By default all leading and trailing spaces will be removed when text is
 processed.  Set this value to 0 in order to disable this behaviour.
 
-For example, to preserve leading and trailing whitespace:
-
-    $hr->trim( 0 );
-    my $trimmed = $hr->process('  <b>i am bold</b>  ');
-
-    # $trimmed now equals: '  i am bold  '
-
 =back
 
 =head1 SUBROUTINES/METHODS
@@ -318,6 +311,13 @@ For example:
 
 By default all leading and trailing spaces will be removed when text is
 processed.  Set this value to 0 in order to disable this behaviour.
+
+For example, to preserve leading and trailing whitespace:
+
+    $hr->trim( 0 );
+    my $trimmed = $hr->process('  <b>i am bold</b>  ');
+
+    # $trimmed now equals: '  i am bold  '
 
 =head1 MOTIVATION
 
