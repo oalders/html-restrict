@@ -31,6 +31,12 @@ has 'parser' => (
     builder => '_build_parser',
 );
 
+has 'strip_comments' => (
+    is      => 'rw',
+    isa     => 'Bool',
+    default => 1,
+);
+
 has 'trim' => (
     is      => 'rw',
     isa     => 'Bool',
@@ -51,7 +57,7 @@ sub _build_parser {
         start_h => [
             sub {
                 my ( $p, $tagname, $attr, $text ) = @_;
-                print "name:  $tagname", "\n" if $self->debug;
+                print "starting tag:  $tagname", "\n" if $self->debug;
 
                 my $more = q{};
                 if ( any( keys %{ $self->get_rules } ) eq $tagname ) {
@@ -85,7 +91,7 @@ sub _build_parser {
             sub {
                 my ( $p, $tagname, $attr, $text ) = @_;
                 if ( any( keys %{ $self->get_rules } ) eq $tagname ) {
-                    print "text: $text" if $self->debug;
+                    print "end: $text" if $self->debug;
                     $self->_processed( ( $self->_processed || q{} ) . $text );
                 }
             },
@@ -95,11 +101,23 @@ sub _build_parser {
         text_h => [
             sub {
                 my ( $p, $text ) = @_;
-                print "$text\n" if $self->debug;
+                print "text: $text\n" if $self->debug;
                 $self->_processed( ( $self->_processed || q{} ) . $text );
             },
             "self,text"
         ],
+
+        comment_h => [
+            sub {
+                my ( $p, $text ) = @_;
+                print "comment: $text\n" if $self->debug;
+                if ( !$self->strip_comments ) {
+                    $self->_processed( ( $self->_processed || q{} ) . $text );
+                }
+            },
+            "self,text"
+        ],
+
     );
 
 }
