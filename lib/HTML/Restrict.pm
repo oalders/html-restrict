@@ -7,7 +7,8 @@ use Moose;
 use Data::Dump qw( dump );
 use HTML::Parser;
 use MooseX::Params::Validate;
-use Perl6::Junction qw( any );
+use Perl6::Junction qw( any none );
+use URI;
 
 has 'allow_comments' => (
     is      => 'rw',
@@ -49,6 +50,15 @@ has 'trim' => (
     default => 1,
 );
 
+has 'uri_schemes' => (
+    is       => 'rw',
+    isa      => 'ArrayRef',
+    required => 0,
+    default  => sub { [ undef, 'http', 'https' ] },
+    reader   => 'get_uri_schemes',
+    writer   => 'set_uri_schemes',
+);
+
 has '_processed' => (
     is      => 'rw',
     isa     => 'Maybe[Str]',
@@ -68,6 +78,19 @@ sub _build_parser {
                 my $more = q{};
                 if ( any( keys %{ $self->get_rules } ) eq $tagname ) {
                     print dump $attr if $self->debug;
+
+                    foreach my $source_type ( 'href', 'src' ) {
+
+                        if ( exists $attr->{$source_type}
+                            && $attr->{href} )
+                        {
+                            my $uri = URI->new( $attr->{$source_type} );
+                            delete $attr->{$source_type}
+                                if none( @{ $self->get_uri_schemes } ) eq
+                                    $uri->scheme;
+                        }
+                    }
+
                     foreach
                         my $attribute ( @{ $self->get_rules->{$tagname} } )
                     {
@@ -236,7 +259,7 @@ to allow a fair amount of HTML, you can try something like this:
         center  => [],
         em      => [],
         i       => [],
-        img     => [qw( alt border height width src style / )],
+        img     => [qw( alt border height width src style )],
         li      => [],
         ol      => [],
         p       => [qw(style)],
@@ -302,6 +325,34 @@ stripped down.
 By default all leading and trailing spaces will be removed when text is
 processed.  Set this value to 0 in order to disable this behaviour.
 
+=item * C<< uri_schemes => [undef, 'http', 'https', 'irc', ... ] >>
+
+As of version 1.0.3, URI scheme checking is performed on all href and src tag
+attributes. The following schemes are allowed out of the box.  No action is
+required on your part:
+
+    [ undef, 'http', 'https' ]
+
+(undef represents relative URIs). These restrictions have been put in place to
+prevent XSS in the form of:
+
+    <a href="javascript:alert(document.cookie)">click for cookie!</a>
+
+See L<URI> for more detailed info on scheme parsing.  If, for example, you
+wanted to filter out every scheme barring SSL, you would do it like this:
+
+    uri_schemes => ['https']
+
+This feature is new in 1.0.3.  Previous to this, there was no schema checking
+at all.  Moving forward, you'll need to whitelist explicitly all URI schemas
+which are not supported by default.  This is in keeping with the whitelisting
+behaviour of this module and is also the safest possible approach.  Keep in
+mind that changes to uri_schemes are not additive, so you'll need to include
+the defaults in any changes you make, should you wish to keep them:
+
+    # defaults + irc
+    uri_schemes => [ 'undef', 'http', 'https', 'irc' ]
+
 =back
 
 =head1 SUBROUTINES/METHODS
@@ -317,6 +368,10 @@ resulting text.  Requires and returns a SCALAR.
 An accessor method, which returns a HASHREF of allowed tags and their
 allowed attributes.  Returns an empty HASHREF by default, since the default
 behaviour is to disallow all HTML.
+
+=head2 get_uri_schemes
+
+Accessor method which returns an ARRAYREF of allowed URI schemes.
 
 =head2 set_rules( \%rules )
 
@@ -342,6 +397,11 @@ For example:
     # return to defaults (no HTML allowed)
     $hr->set_rules({});
 
+=head2 set_uri_schemes
+
+Override existing URI schemes:
+
+    $hr->set_uri_schemes([ 'http', 'https', undef, 'ftp' ]);
 
 =head2 trim( 0|1 )
 
