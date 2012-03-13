@@ -11,19 +11,19 @@ my $hr = HTML::Restrict->new;
 my $text  = '<!-- comment here -->stuff';
 $hr->debug( 1 );
 
-is $hr->process( $text ), 'stuff', 'comments stripped';
-$hr->strip_comments( 0 );
-is $hr->process( $text ), $text, 'comments preserved';
+is $hr->process( $text ), 'stuff', 'comments allowed';
+$hr->allow_comments( 1 );
+is $hr->process( $text ), $text, 'comments allowd';
 
 $text = 'before<!-- This is a comment -- -- So is this -->after';
-$hr->strip_comments( 1 );
+$hr->allow_comments( 0 );
 
-is $hr->process( $text ), 'beforeafter', 'comment stripped';
+is $hr->process( $text ), 'beforeafter', 'comment allowed';
 
-$hr->strip_comments( 0 );
-is $hr->process( $text ), $text, 'comments preserved';
+$hr->allow_comments( 1 );
+is $hr->process( $text ), $text, 'comments allowd';
 
-$hr->strip_comments( 1 );
+$hr->allow_comments( 0 );
 $text = '<!-- <script> <h1> -->';
 is $hr->process( $text ), undef, 'tags nested in comments removed';
 

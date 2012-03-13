@@ -9,6 +9,18 @@ use HTML::Parser;
 use MooseX::Params::Validate;
 use Perl6::Junction qw( any );
 
+has 'allow_comments' => (
+    is      => 'rw',
+    isa     => 'Bool',
+    default => 0,
+);
+
+has 'allow_declaration' => (
+    is      => 'rw',
+    isa     => 'Bool',
+    default => 0,
+);
+
 has 'debug' => (
     is      => 'rw',
     isa     => 'Bool',
@@ -29,12 +41,6 @@ has 'parser' => (
     is      => 'ro',
     lazy    => 1,
     builder => '_build_parser',
-);
-
-has 'strip_comments' => (
-    is      => 'rw',
-    isa     => 'Bool',
-    default => 1,
 );
 
 has 'trim' => (
@@ -111,12 +117,24 @@ sub _build_parser {
             sub {
                 my ( $p, $text ) = @_;
                 print "comment: $text\n" if $self->debug;
-                if ( !$self->strip_comments ) {
+                if ( $self->allow_comments ) {
                     $self->_processed( ( $self->_processed || q{} ) . $text );
                 }
             },
             "self,text"
         ],
+
+        declaration_h => [
+            sub {
+                my ( $p, $text ) = @_;
+                print "declaration: $text\n" if $self->debug;
+                if ( $self->allow_declaration ) {
+                    $self->_processed( ( $self->_processed || q{} ) . $text );
+                }
+            },
+            "self,text"
+        ],
+
 
     );
 
@@ -330,7 +348,7 @@ For example:
 By default all leading and trailing spaces will be removed when text is
 processed.  Set this value to 0 in order to disable this behaviour.
 
-For example, to preserve leading and trailing whitespace:
+For example, to allow leading and trailing whitespace:
 
     $hr->trim( 0 );
     my $trimmed = $hr->process('  <b>i am bold</b>  ');
