@@ -6,7 +6,6 @@ use Moose;
 
 use Data::Dump qw( dump );
 use HTML::Parser;
-use MooseX::Params::Validate;
 use Perl6::Junction qw( any none );
 use URI;
 
@@ -171,7 +170,9 @@ sub process {
     return if !@_;
     return $_[0] if !$_[0];
 
-    my ( $content ) = pos_validated_list( \@_, { type => 'Str' }, );
+    my ( $content ) = @_;
+    die 'content must be a string!'
+        unless ref(\$content) eq 'SCALAR';
     $self->_clear_processed;
 
     my $parser = $self->parser;
