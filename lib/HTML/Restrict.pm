@@ -2,36 +2,38 @@ use strict;
 
 package HTML::Restrict;
 
-use Moose;
+use Moo;
+use Sub::Quote 'quote_sub';
 
 use Data::Dump qw( dump );
 use HTML::Parser;
 use Perl6::Junction qw( any none );
+use MooX::Types::MooseLike::Base qw(Bool HashRef ArrayRef);
 use URI;
 
 has 'allow_comments' => (
     is      => 'rw',
-    isa     => 'Bool',
-    default => 0,
+    isa     => Bool,
+    default => quote_sub(q{ 0 }),
 );
 
 has 'allow_declaration' => (
     is      => 'rw',
-    isa     => 'Bool',
-    default => 0,
+    isa     => Bool,
+    default => quote_sub(q{ 0 }),
 );
 
 has 'debug' => (
     is      => 'rw',
-    isa     => 'Bool',
-    default => 0,
+    isa     => Bool,
+    default => quote_sub(q{ 0 }),
 );
 
 has 'rules' => (
     is       => 'rw',
-    isa      => 'HashRef',
+    isa      => HashRef,
     required => 0,
-    default  => sub { {} },
+    default  => quote_sub(q{ {} }),
     trigger  => \&_build_parser,
     reader   => 'get_rules',
     writer   => 'set_rules',
@@ -45,13 +47,13 @@ has 'parser' => (
 
 has 'trim' => (
     is      => 'rw',
-    isa     => 'Bool',
-    default => 1,
+    isa     => Bool,
+    default => quote_sub(q{ 1 }),
 );
 
 has 'uri_schemes' => (
     is       => 'rw',
-    isa      => 'ArrayRef',
+    isa      => ArrayRef,
     required => 0,
     default  => sub { [ undef, 'http', 'https' ] },
     reader   => 'get_uri_schemes',
@@ -60,7 +62,10 @@ has 'uri_schemes' => (
 
 has '_processed' => (
     is      => 'rw',
-    isa     => 'Maybe[Str]',
+    isa     => quote_sub(q{
+        die "$_[0] is not false or a string!"
+            unless !defined($_[0]) || $_[0] eq "" || "$_[0]" eq '0' || ref(\$_[0]) eq 'SCALAR'
+    }),
     clearer => '_clear_processed',
 );
 
