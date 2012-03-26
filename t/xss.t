@@ -15,6 +15,9 @@ my $text = '<a href="javascript:alert(1)">oops!</a>';
 my $clean = $hr->process( $text );
 is $clean, '<a>oops!</a>', "bad scheme removed";
 
+is $hr->process( '<a href="javascript&#58;evil_script()">evil</a>' ),
+    '<a>evil</a>', 'bad scheme removed';
+
 foreach my $uri (
     'http://vilerichard.com', 'https://vilerichard.com',
     '//vilerichard.com',      '/music'
