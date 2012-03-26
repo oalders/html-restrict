@@ -1,5 +1,8 @@
 Revision history for HTML-Restrict
 
+        - Replace Moose with Moo for speed in non-persistent apps
+            (Arthur Axel 'fREW' Schmidt)
+
 1.0.2   2011-10-11
         - No longer emit warnings when pure HTML is supplied for processing
             Rick Moore (RT #71553)
