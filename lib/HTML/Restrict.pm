@@ -204,9 +204,9 @@ sub process {
 
 =head1 SYNOPSIS
 
-This module uses I<HTML::Parser> to strip HTML from text in a restrictive manner.
-By default all HTML is restricted.  You may alter the default behaviour by
-supplying your own tag rules.
+This module uses I<HTML::Parser> to strip HTML from text in a restrictive
+manner.  By default all HTML is restricted.  You may alter the default
+behaviour by supplying your own tag rules.
 
     use HTML::Restrict;
 
@@ -218,8 +218,6 @@ supplying your own tag rules.
     # $processed now equals: 'i am bold'
 
     # Now, a less restrictive example:
-    ##################################
-
     use HTML::Restrict;
 
     my $hr = HTML::Restrict->new();
@@ -241,9 +239,9 @@ Creates and returns a new HTML::Restrict object.
 
     my $hr = HTML::Restrict->new()
 
-HTML::Restrict doesn't require any params to be passed to new.  If your goal
-is to remove all HTML from text, then no further setup is required.  Just
-pass your text to the process() method and you're done:
+HTML::Restrict doesn't require any params to be passed to new.  If your goal is
+to remove all HTML from text, then no further setup is required.  Just pass
+your text to the process() method and you're done:
 
     my $plain_text = $hr->process( $html );
 
@@ -295,8 +293,8 @@ Allow bolded text, images and some (but not all) image attributes:
     );
     my $hr = HTML::Restrict->new( rules => \%rules );
 
-Since I<HTML::Parser> treats a closing slash as an attribute, you'll need to add
-"/" to your list of allowed attributes if you'd like your tags to retain
+Since I<HTML::Parser> treats a closing slash as an attribute, you'll need to
+add "/" to your list of allowed attributes if you'd like your tags to retain
 closing slashes.  For example:
 
     my $hr = HTML::Restrict->new( rules =>{ hr => [] } );
@@ -321,10 +319,10 @@ then your image tags will all be built like this:
 
     <img src=".." alt="..." title="..." width="..." height="..." id=".." />
 
-This gives you greater consistency in your tag layout.  If you don't care
-about element order you don't need to pay any attention to this, but you
-should be aware that your elements are being reconstructed rather than just
-stripped down.
+This gives you greater consistency in your tag layout.  If you don't care about
+element order you don't need to pay any attention to this, but you should be
+aware that your elements are being reconstructed rather than just stripped
+down.
 
 =item * C<< trim => [0|1] >>
 
@@ -371,9 +369,9 @@ resulting text.  Requires and returns a SCALAR.
 
 =head2 get_rules
 
-An accessor method, which returns a HASHREF of allowed tags and their
-allowed attributes.  Returns an empty HASHREF by default, since the default
-behaviour is to disallow all HTML.
+An accessor method, which returns a HASHREF of allowed tags and their allowed
+attributes.  Returns an empty HASHREF by default, since the default behaviour
+is to disallow all HTML.
 
 =head2 get_uri_schemes
 
@@ -423,16 +421,16 @@ For example, to allow leading and trailing whitespace:
 
 =head1 MOTIVATION
 
-There are already several modules on the CPAN which accomplish much of the
-same thing, but after doing a lot of poking around, I was unable to find a
-solution with a simple setup which I was happy with.
+There are already several modules on the CPAN which accomplish much of the same
+thing, but after doing a lot of poking around, I was unable to find a solution
+with a simple setup which I was happy with.
 
 The most common use case might be stripping HTML from user submitted data
-completely or allowing just a few tags and attributes to be displayed.  This
-module doesn't do any validation on the actual content of the tags or
-attributes.  If this is a requirement, you can either mess with the
-parser object, post-process the text yourself or have a look at one of the
-more feature-rich modules in the SEE ALSO section below.
+completely or allowing just a few tags and attributes to be displayed.  With
+the exception of URI scheme checking, this module doesn't do any validation on
+the actual content of the tags or attributes.  If this is a requirement, you
+can either mess with the parser object, post-process the text yourself or have
+a look at one of the more feature-rich modules in the SEE ALSO section below.
 
 My aim here is to keep things easy and, hopefully, cover a lot of the less
 complex use cases with just a few lines of code and some brief documentation.
@@ -457,5 +455,7 @@ Mark Jubenville (ioncache)
 Duncan Forsyth
 
 Rick Moore
+
+Arthur Axel 'fREW' Schmidt
 
 =cut
