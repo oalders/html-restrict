@@ -2,7 +2,7 @@ NAME
     HTML::Restrict - Strip unwanted HTML tags and attributes
 
 VERSION
-    version 1.0.2
+    version 1.0.3
 
 SYNOPSIS
     This module uses *HTML::Parser* to strip HTML from text in a restrictive
@@ -19,8 +19,6 @@ SYNOPSIS
         # $processed now equals: 'i am bold'
 
         # Now, a less restrictive example:
-        ##################################
-
         use HTML::Restrict;
 
         my $hr = HTML::Restrict->new();
@@ -63,7 +61,7 @@ CONSTRUCTOR AND STARTUP
                 center  => [],
                 em      => [],
                 i       => [],
-                img     => [qw( alt border height width src style / )],
+                img     => [qw( alt border height width src style )],
                 li      => [],
                 ol      => [],
                 p       => [qw(style)],
@@ -131,12 +129,35 @@ CONSTRUCTOR AND STARTUP
         is processed. Set this value to 0 in order to disable this
         behaviour.
 
-        For example, to preserve leading and trailing whitespace:
+    *   "uri_schemes => [undef, 'http', 'https', 'irc', ... ]"
 
-            $hr->trim( 0 );
-            my $trimmed = $hr->process('  <b>i am bold</b>  ');
+        As of version 1.0.3, URI scheme checking is performed on all href
+        and src tag attributes. The following schemes are allowed out of the
+        box. No action is required on your part:
 
-            # $trimmed now equals: '  i am bold  '
+            [ undef, 'http', 'https' ]
+
+        (undef represents relative URIs). These restrictions have been put
+        in place to prevent XSS in the form of:
+
+            <a href="javascript:alert(document.cookie)">click for cookie!</a>
+
+        See URI for more detailed info on scheme parsing. If, for example,
+        you wanted to filter out every scheme barring SSL, you would do it
+        like this:
+
+            uri_schemes => ['https']
+
+        This feature is new in 1.0.3. Previous to this, there was no schema
+        checking at all. Moving forward, you'll need to whitelist explicitly
+        all URI schemas which are not supported by default. This is in
+        keeping with the whitelisting behaviour of this module and is also
+        the safest possible approach. Keep in mind that changes to
+        uri_schemes are not additive, so you'll need to include the defaults
+        in any changes you make, should you wish to keep them:
+
+            # defaults + irc
+            uri_schemes => [ 'undef', 'http', 'https', 'irc' ]
 
 SUBROUTINES/METHODS
   process( $html )
@@ -148,6 +169,9 @@ SUBROUTINES/METHODS
     An accessor method, which returns a HASHREF of allowed tags and their
     allowed attributes. Returns an empty HASHREF by default, since the
     default behaviour is to disallow all HTML.
+
+  get_uri_schemes
+    Accessor method which returns an ARRAYREF of allowed URI schemes.
 
   set_rules( \%rules )
     Sets the rules which will be used to process your data. By default all
@@ -172,9 +196,21 @@ SUBROUTINES/METHODS
         # return to defaults (no HTML allowed)
         $hr->set_rules({});
 
+  set_uri_schemes
+    Override existing URI schemes:
+
+        $hr->set_uri_schemes([ 'http', 'https', undef, 'ftp' ]);
+
   trim( 0|1 )
     By default all leading and trailing spaces will be removed when text is
     processed. Set this value to 0 in order to disable this behaviour.
+
+    For example, to allow leading and trailing whitespace:
+
+        $hr->trim( 0 );
+        my $trimmed = $hr->process('  <b>i am bold</b>  ');
+
+        # $trimmed now equals: '  i am bold  '
 
 MOTIVATION
     There are already several modules on the CPAN which accomplish much of
@@ -183,10 +219,11 @@ MOTIVATION
 
     The most common use case might be stripping HTML from user submitted
     data completely or allowing just a few tags and attributes to be
-    displayed. This module doesn't do any validation on the actual content
-    of the tags or attributes. If this is a requirement, you can either mess
-    with the parser object, post-process the text yourself or have a look at
-    one of the more feature-rich modules in the SEE ALSO section below.
+    displayed. With the exception of URI scheme checking, this module
+    doesn't do any validation on the actual content of the tags or
+    attributes. If this is a requirement, you can either mess with the
+    parser object, post-process the text yourself or have a look at one of
+    the more feature-rich modules in the SEE ALSO section below.
 
     My aim here is to keep things easy and, hopefully, cover a lot of the
     less complex use cases with just a few lines of code and some brief
@@ -208,11 +245,13 @@ ACKNOWLEDGEMENTS
 
     Rick Moore
 
+    Arthur Axel 'fREW' Schmidt
+
 AUTHOR
     Olaf Alders <olaf@wundercounter.com>
 
 COPYRIGHT AND LICENSE
-    This software is copyright (c) 2011 by Olaf Alders.
+    This software is copyright (c) 2012 by Olaf Alders.
 
     This is free software; you can redistribute it and/or modify it under
     the same terms as the Perl 5 programming language system itself.
