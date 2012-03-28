@@ -1,16 +1,13 @@
 #!perl
 
-use Test::More tests => 24;
-use Test::NoWarnings;
+use Test::More;
 
 use strict;
 use warnings;
 
-BEGIN {
-    use_ok( 'Data::Dump' );
-    use_ok( 'HTML::Restrict' );
-    use_ok( 'Scalar::Util' );
-}
+use Data::Dump;
+use HTML::Restrict;
+use Scalar::Util;
 
 my $version = $HTML::Restrict::VERSION || 'development';
 diag( "Testing HTML::Restrict $version, Perl $], $^X" );
@@ -112,3 +109,5 @@ cmp_ok( $hr->process( '0' ), 'eq', '0', "untrue values not processed");
 cmp_ok( $hr->process( '000' ), 'eq', '000', "untrue values not processed");
 
 ok( !$hr->process("<html>"), "process only HTML" );
+
+done_testing();
