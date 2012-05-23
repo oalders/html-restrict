@@ -2,13 +2,9 @@ NAME
     HTML::Restrict - Strip unwanted HTML tags and attributes
 
 VERSION
-    version 1.0.3
+    version 1.0.4
 
 SYNOPSIS
-    This module uses *HTML::Parser* to strip HTML from text in a restrictive
-    manner. By default all HTML is restricted. You may alter the default
-    behaviour by supplying your own tag rules.
-
         use HTML::Restrict;
 
         my $hr = HTML::Restrict->new();
@@ -31,6 +27,11 @@ SYNOPSIS
         my $processed = $hr->process( $html );
 
         # $processed now equals: <b>hello</b> <img src="pic.jpg" alt="me" />
+
+DESCRIPTION
+    This module uses *HTML::Parser* to strip HTML from text in a restrictive
+    manner. By default all HTML is restricted. You may alter the default
+    behaviour by supplying your own tag rules.
 
 CONSTRUCTOR AND STARTUP
   new()

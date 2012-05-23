@@ -1,5 +1,9 @@
 Revision history for HTML-Restrict
 
+1.0.4   2012-05-22
+        - Explicity require MooX::Types::MooseLike rather than
+          MooX::Types::MooseLike::Base (Matt Phillips/Github #2)
+
 1.0.3   2012-03-27
         - Replaces Moose with Moo for speed in non-persistent apps (Arthur Axel
           'fREW' Schmidt)
