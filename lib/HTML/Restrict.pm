@@ -202,11 +202,13 @@ sub process {
 
 =pod
 
-=head1 SYNOPSIS
+=head1 DESCRIPTION
 
 This module uses I<HTML::Parser> to strip HTML from text in a restrictive
 manner.  By default all HTML is restricted.  You may alter the default
 behaviour by supplying your own tag rules.
+
+=head1 SYNOPSIS
 
     use HTML::Restrict;
 
