@@ -356,8 +356,8 @@ behaviour of this module and is also the safest possible approach.  Keep in
 mind that changes to uri_schemes are not additive, so you'll need to include
 the defaults in any changes you make, should you wish to keep them:
 
-    # defaults + irc
-    uri_schemes => [ 'undef', 'http', 'https', 'irc' ]
+    # defaults + irc + mailto
+    uri_schemes => [ 'undef', 'http', 'https', 'irc', 'mailto' ]
 
 =back
 
