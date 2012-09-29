@@ -3,12 +3,14 @@ use strict;
 package HTML::Restrict;
 
 use Moo;
-use Sub::Quote 'quote_sub';
 
+use Carp qw( croak );
 use Data::Dump qw( dump );
 use HTML::Parser;
 use Perl6::Junction qw( any none );
 use MooX::Types::MooseLike::Base qw(Bool HashRef ArrayRef);
+use Scalar::Util qw( reftype );
+use Sub::Quote 'quote_sub';
 use URI;
 
 has 'allow_comments' => (
@@ -72,6 +74,25 @@ has '_processed' => (
 sub _build_parser {
 
     my $self = shift;
+    my $rules = shift;
+
+    # don't allow any upper case tag or attribute names
+    # these rules would otherwise silently be ignored
+    if ( $rules ) {
+        foreach my $tag_name ( keys %{$rules} ) {
+            if ( lc $tag_name ne $tag_name ) {
+                croak "All tag names must be lower cased"
+            }
+            if ( reftype $rules->{ $tag_name } eq 'ARRAY' ) {
+                foreach my $attr_name ( @{$rules->{ $tag_name }} ) {
+                    if ( lc $attr_name ne $attr_name ) {
+                        croak "All attribute names must be lower cased";
+                    }
+                }
+            }
+        }
+    }
+
     return HTML::Parser->new(
 
         start_h => [
@@ -402,6 +423,15 @@ For example:
 
     # return to defaults (no HTML allowed)
     $hr->set_rules({});
+
+Also note that all tag and attribute names must be supplied in lower case.
+
+    # correct
+    my $hr = HTML::Restrict->new( rules => { body => ['onload'] } );
+
+    # throws a fatal error
+    my $hr = HTML::Restrict->new( rules => { Body => ['onLoad'] } );
+
 
 =head2 set_uri_schemes
 
