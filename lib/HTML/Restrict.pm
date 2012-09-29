@@ -16,26 +16,26 @@ use URI;
 has 'allow_comments' => (
     is      => 'rw',
     isa     => Bool,
-    default => quote_sub(q{ 0 }),
+    default => quote_sub( q{ 0 } ),
 );
 
 has 'allow_declaration' => (
     is      => 'rw',
     isa     => Bool,
-    default => quote_sub(q{ 0 }),
+    default => quote_sub( q{ 0 } ),
 );
 
 has 'debug' => (
     is      => 'rw',
     isa     => Bool,
-    default => quote_sub(q{ 0 }),
+    default => quote_sub( q{ 0 } ),
 );
 
 has 'rules' => (
     is       => 'rw',
     isa      => HashRef,
     required => 0,
-    default  => quote_sub(q{ {} }),
+    default  => quote_sub( q{ {} } ),
     trigger  => \&_build_parser,
     reader   => 'get_rules',
     writer   => 'set_rules',
@@ -50,7 +50,7 @@ has 'parser' => (
 has 'trim' => (
     is      => 'rw',
     isa     => Bool,
-    default => quote_sub(q{ 1 }),
+    default => quote_sub( q{ 1 } ),
 );
 
 has 'uri_schemes' => (
@@ -63,17 +63,19 @@ has 'uri_schemes' => (
 );
 
 has '_processed' => (
-    is      => 'rw',
-    isa     => quote_sub(q{
+    is  => 'rw',
+    isa => quote_sub(
+        q{
         die "$_[0] is not false or a string!"
             unless !defined($_[0]) || $_[0] eq "" || "$_[0]" eq '0' || ref(\$_[0]) eq 'SCALAR'
-    }),
+    }
+    ),
     clearer => '_clear_processed',
 );
 
 sub _build_parser {
 
-    my $self = shift;
+    my $self  = shift;
     my $rules = shift;
 
     # don't allow any upper case tag or attribute names
@@ -81,10 +83,10 @@ sub _build_parser {
     if ( $rules ) {
         foreach my $tag_name ( keys %{$rules} ) {
             if ( lc $tag_name ne $tag_name ) {
-                croak "All tag names must be lower cased"
+                croak "All tag names must be lower cased";
             }
-            if ( reftype $rules->{ $tag_name } eq 'ARRAY' ) {
-                foreach my $attr_name ( @{$rules->{ $tag_name }} ) {
+            if ( reftype $rules->{$tag_name} eq 'ARRAY' ) {
+                foreach my $attr_name ( @{ $rules->{$tag_name} } ) {
                     if ( lc $attr_name ne $attr_name ) {
                         croak "All attribute names must be lower cased";
                     }
@@ -183,7 +185,6 @@ sub _build_parser {
             "self,text"
         ],
 
-
     );
 
 }
@@ -198,7 +199,7 @@ sub process {
 
     my ( $content ) = @_;
     die 'content must be a string!'
-        unless ref(\$content) eq 'SCALAR';
+        unless ref( \$content ) eq 'SCALAR';
     $self->_clear_processed;
 
     my $parser = $self->parser;
