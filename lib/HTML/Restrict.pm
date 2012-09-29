@@ -31,6 +31,18 @@ has 'debug' => (
     default => quote_sub( q{ 0 } ),
 );
 
+has '_is_script' => (
+    is      => 'rw',
+    isa     => Bool,
+    default => quote_sub( q{ 0 } ),
+);
+
+has 'parser' => (
+    is      => 'ro',
+    lazy    => 1,
+    builder => '_build_parser',
+);
+
 has 'rules' => (
     is       => 'rw',
     isa      => HashRef,
@@ -39,12 +51,6 @@ has 'rules' => (
     trigger  => \&_build_parser,
     reader   => 'get_rules',
     writer   => 'set_rules',
-);
-
-has 'parser' => (
-    is      => 'ro',
-    lazy    => 1,
-    builder => '_build_parser',
 );
 
 has 'trim' => (
@@ -101,6 +107,11 @@ sub _build_parser {
             sub {
                 my ( $p, $tagname, $attr, $text ) = @_;
                 print "starting tag:  $tagname", "\n" if $self->debug;
+                if ( $tagname eq 'script'
+                    && !exists $self->get_rules->{script} )
+                {
+                    $self->_is_script( 1 );
+                }
 
                 my $more = q{};
                 if ( any( keys %{ $self->get_rules } ) eq $tagname ) {
@@ -146,6 +157,13 @@ sub _build_parser {
         end_h => [
             sub {
                 my ( $p, $tagname, $attr, $text ) = @_;
+                print "end: $text\n" if $self->debug;
+                if ( $tagname eq 'script'
+                    && !exists $self->get_rules->{script} )
+                {
+                    $self->_is_script( 0 );
+                }
+
                 if ( any( keys %{ $self->get_rules } ) eq $tagname ) {
                     print "end: $text" if $self->debug;
                     $self->_processed( ( $self->_processed || q{} ) . $text );
@@ -158,7 +176,9 @@ sub _build_parser {
             sub {
                 my ( $p, $text ) = @_;
                 print "text: $text\n" if $self->debug;
-                $self->_processed( ( $self->_processed || q{} ) . $text );
+                if ( !$self->_is_script ) {
+                    $self->_processed( ( $self->_processed || q{} ) . $text );
+                }
             },
             "self,text"
         ],

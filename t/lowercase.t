@@ -26,8 +26,4 @@ like(
     "dies on mixed case attributes",
 );
 
-
-my $hr = HTML::Restrict->new( rules => { body => ['onload'] } );
-diag $hr->process( $html );
-
 done_testing();
