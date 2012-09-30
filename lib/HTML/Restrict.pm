@@ -31,7 +31,7 @@ has 'debug' => (
     default => quote_sub( q{ 0 } ),
 );
 
-has '_is_script' => (
+has '_stripping' => (
     is      => 'rw',
     isa     => Bool,
     default => quote_sub( q{ 0 } ),
@@ -107,13 +107,8 @@ sub _build_parser {
             sub {
                 my ( $p, $tagname, $attr, $text ) = @_;
                 print "starting tag:  $tagname", "\n" if $self->debug;
-                if ( $tagname eq 'script'
-                    && !exists $self->get_rules->{script} )
-                {
-                    $self->_is_script( 1 );
-                }
-
                 my $more = q{};
+
                 if ( any( keys %{ $self->get_rules } ) eq $tagname ) {
                     print dump $attr if $self->debug;
 
@@ -150,6 +145,10 @@ sub _build_parser {
 
                     $self->_processed( ( $self->_processed || q{} ) . $elem );
                 }
+                elsif ( any( 'script', 'style' ) eq $tagname ) {
+                    $self->_stripping( 1 );
+                }
+
             },
             "self,tagname,attr,text"
         ],
@@ -158,16 +157,14 @@ sub _build_parser {
             sub {
                 my ( $p, $tagname, $attr, $text ) = @_;
                 print "end: $text\n" if $self->debug;
-                if ( $tagname eq 'script'
-                    && !exists $self->get_rules->{script} )
-                {
-                    $self->_is_script( 0 );
-                }
-
                 if ( any( keys %{ $self->get_rules } ) eq $tagname ) {
                     print "end: $text" if $self->debug;
                     $self->_processed( ( $self->_processed || q{} ) . $text );
                 }
+                elsif ( any( 'script', 'style' ) eq $tagname ) {
+                    $self->_stripping( 0 );
+                }
+
             },
             "self,tagname,attr,text"
         ],
@@ -176,7 +173,7 @@ sub _build_parser {
             sub {
                 my ( $p, $text ) = @_;
                 print "text: $text\n" if $self->debug;
-                if ( !$self->_is_script ) {
+                if ( !$self->_stripping ) {
                     $self->_processed( ( $self->_processed || q{} ) . $text );
                 }
             },
