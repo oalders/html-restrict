@@ -31,12 +31,6 @@ has 'debug' => (
     default => quote_sub( q{ 0 } ),
 );
 
-has '_stripping' => (
-    is      => 'rw',
-    isa     => Bool,
-    default => quote_sub( q{ 0 } ),
-);
-
 has 'parser' => (
     is      => 'ro',
     lazy    => 1,
@@ -51,6 +45,12 @@ has 'rules' => (
     trigger  => \&_build_parser,
     reader   => 'get_rules',
     writer   => 'set_rules',
+);
+
+has 'strip_enclosed_content' => (
+    is      => 'rw',
+    isa     => ArrayRef,
+    default => sub { ['script', 'style'] },
 );
 
 has 'trim' => (
@@ -77,6 +77,12 @@ has '_processed' => (
     }
     ),
     clearer => '_clear_processed',
+);
+
+has '_stripper_stack' => (
+    is      => 'rw',
+    isa     => ArrayRef,
+    default => sub { [] },
 );
 
 sub _build_parser {
@@ -145,8 +151,11 @@ sub _build_parser {
 
                     $self->_processed( ( $self->_processed || q{} ) . $elem );
                 }
-                elsif ( any( 'script', 'style' ) eq $tagname ) {
-                    $self->_stripping( 1 );
+                elsif (
+                    any( @{ $self->strip_enclosed_content } ) eq $tagname )
+                {
+                    print "adding $tagname to strippers" if $self->debug;
+                    push @{ $self->_stripper_stack }, $tagname;
                 }
 
             },
@@ -158,11 +167,12 @@ sub _build_parser {
                 my ( $p, $tagname, $attr, $text ) = @_;
                 print "end: $text\n" if $self->debug;
                 if ( any( keys %{ $self->get_rules } ) eq $tagname ) {
-                    print "end: $text" if $self->debug;
                     $self->_processed( ( $self->_processed || q{} ) . $text );
                 }
-                elsif ( any( 'script', 'style' ) eq $tagname ) {
-                    $self->_stripping( 0 );
+                elsif (
+                    any( @{ $self->_stripper_stack } ) eq $tagname )
+                {
+                    $self->_delete_tag_from_stack( $tagname );
                 }
 
             },
@@ -173,7 +183,7 @@ sub _build_parser {
             sub {
                 my ( $p, $text ) = @_;
                 print "text: $text\n" if $self->debug;
-                if ( !$self->_stripping ) {
+                if ( !@{$self->_stripper_stack} ) {
                     $self->_processed( ( $self->_processed || q{} ) . $text );
                 }
             },
@@ -233,6 +243,30 @@ sub process {
 
     return $self->_processed;
 
+}
+
+# strip_enclosed_content tags could be nested in the source HTML, so we
+# maintain a stack of these tags.
+
+sub _delete_tag_from_stack {
+
+    my $self        = shift;
+    my $closing_tag = shift;
+
+    my $found    = 0;
+    my @tag_list = ();
+
+    foreach my $tag ( reverse @{ $self->_stripper_stack } ) {
+        if ( $tag eq $closing_tag && $found == 0 ) {
+            $found = 1;
+            next;
+        }
+        push @tag_list, $tag;
+    }
+
+    $self->_stripper_stack( [ reverse @tag_list ] );
+
+    return;
 }
 
 1;    # End of HTML::Restrict
