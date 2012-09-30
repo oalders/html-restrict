@@ -503,6 +503,58 @@ For example, to allow leading and trailing whitespace:
 
     # $trimmed now equals: '  i am bold  '
 
+=head2 allow_declaration
+
+Set this value to true if you'd like to allow/preserve DOCTYPE declarations in
+your content.  Useful when cleaning up your own static files or templates. This
+feature is off by default.
+
+    my $html = q[<!doctype html><body>foo</body>];
+
+    $hr->allow_declaration( 1 );
+    $html = $hr->process( $html );
+    # $html is now: "<!doctype html>foo"
+
+=head2 allow_comments
+
+Set this value to true if you'd like to allow/preserve HTML comments in your
+content.  Useful when cleaning up your own static files or templates. This
+feature is off by default.
+
+    my $html = q[<body><!-- comments! -->foo</body>];
+
+    $hr->allow_comments( 1 );
+    $html = $hr->process( $html );
+    # $html is now: "<!-- comments! -->foo"
+
+=head2 strip_enclosed_content
+
+The default behaviour up to 1.0.4 was to preserve the content between script
+and style tags, even when the tags themselves were being deleted.  So, you'd be
+left with a bunch of JavaScript or CSS, just with the enclosing tags missing.
+This is almost never what you want, so starting at 1.0.5 the default will be to
+remove any script or style info which is enclosed in these tags, unless they
+have specifically been whitelisted in the rules.  This will be a sane default
+when cleaning up content submitted via a web form.  However, if you're using
+HTML::Restrict to purge your own HTML you can be more restrictive.
+
+    # strip the head section, in addition to JS and CSS
+    my $html = '<html><head>...</head><body>...<script>JS here</script>foo';
+    $hr->strip_enclosed_content( ['script','style','head'] );
+
+    $html = $hr->process( $html );
+    # $html is now '<html><body>...foo';
+
+The caveat here is that HTML::Restrict will not try to fix broken HTML. In the
+above example, if you have any opening script, style or head tags which don't
+also include matching closing tags, all following content will be stripped
+away, regardless of any parent tags.
+
+Keep in mind that changes to strip_enclosed_content are not additive, so if you
+are adding additional tags you'll need to include the entire list of tags whose
+enclosed content you'd like to remove.  This feature strips script and style
+tags by default.
+
 =head1 MOTIVATION
 
 There are already several modules on the CPAN which accomplish much of the same
