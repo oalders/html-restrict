@@ -110,4 +110,22 @@ cmp_ok( $hr->process( '000' ), 'eq', '000', "untrue values not processed");
 
 ok( !$hr->process("<html>"), "process only HTML" );
 
+
+# encode text entities
+$hr = HTML::Restrict->new( rules => { p => [] } );
+
+cmp_ok(
+    $hr->process( '<p>true if 5 < a && name == "joe"</p>' ),
+        'eq', '<p>true if 5 < a && name == "joe"</p>',
+    "don't encode entities in text by default",
+);
+
+$hr->encode_entities(1);
+
+cmp_ok(
+    $hr->process( '<p>true if 5 < a && name == "joe"</p>' ),
+        'eq', '<p>true if 5 &lt; a &amp;&amp; name == &quot;joe&quot;</p>',
+    "encode entities in text",
+);
+
 done_testing();
