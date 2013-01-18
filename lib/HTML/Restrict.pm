@@ -31,6 +31,12 @@ has 'debug' => (
     default => quote_sub( q{ 0 } ),
 );
 
+has 'encode_entities' => (
+    is      => 'rw',
+    isa     => Bool,
+    default => quote_sub( q{ 0 } ),
+);
+
 has 'parser' => (
     is      => 'ro',
     lazy    => 1,
@@ -183,6 +189,9 @@ sub _build_parser {
             sub {
                 my ( $p, $text ) = @_;
                 print "text: $text\n" if $self->debug;
+                if ( $self->encode_entities ) {
+                    HTML::Entities::encode_entities($text);
+                }
                 if ( !@{$self->_stripper_stack} ) {
                     $self->_processed( ( $self->_processed || q{} ) . $text );
                 }
@@ -554,6 +563,20 @@ Keep in mind that changes to strip_enclosed_content are not additive, so if you
 are adding additional tags you'll need to include the entire list of tags whose
 enclosed content you'd like to remove.  This feature strips script and style
 tags by default.
+
+=head2 encode_entities( 0|1 )
+
+Set this value to 1 to encode unsafe characters in text content.  By default,
+text content is unmodified.
+
+For example:
+
+    $hr->set_rules({ p => [] });
+    $hr->encode_entities( 1 );
+    my $encoded = $hr->process('<p>true if 5 < a && name == "joe"</p>');
+
+    # $encoded now equals:
+    # '<p>true if 5 &lt; a &amp;&amp; name == &quot;joe&quot;</p>'
 
 =head1 MOTIVATION
 
