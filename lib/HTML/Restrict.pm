@@ -124,9 +124,17 @@ sub _build_parser {
                             && $attr->{href} )
                         {
                             my $uri = URI->new( $attr->{$source_type} );
-                            delete $attr->{$source_type}
-                                if none( @{ $self->get_uri_schemes } ) eq
-                                    $uri->scheme;
+                            if (defined $uri->scheme) {
+                                delete $attr->{$source_type}
+                                    if none(
+                                        grep defined, @{ $self->get_uri_schemes }
+                                    ) eq $uri->scheme;
+                            }
+                            else {  # relative uri
+                                delete $attr->{$source_type}
+                                    unless grep !defined,
+                                        @{ $self->get_uri_schemes };
+                            }
                         }
                     }
 
