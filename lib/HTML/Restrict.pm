@@ -98,7 +98,8 @@ sub _build_parser {
                 croak "All tag names must be lower cased";
             }
             if ( reftype $rules->{$tag_name} eq 'ARRAY' ) {
-                foreach my $attr_name ( @{ $rules->{$tag_name} } ) {
+                foreach my $attr_item ( @{ $rules->{$tag_name} } ) {
+                    my $attr_name = ref $attr_item ? $attr_item->[0] : $attr_item;
                     if ( lc $attr_name ne $attr_name ) {
                         croak "All attribute names must be lower cased";
                     }
@@ -133,10 +134,18 @@ sub _build_parser {
                     foreach
                         my $attribute ( @{ $self->get_rules->{$tagname} } )
                     {
-                        if ( exists $attr->{$attribute}
-                            && $attribute ne q{/} )
-                        {
-                            $more .= qq[ $attribute="$attr->{$attribute}" ];
+                        if (ref $attribute) {  # has a regex constraint
+                            my ($attr_name, $regex) = @$attribute[0,1];
+                            if ( exists $attr->{$attr_name} ) {
+                                $more .= qq[ $attr_name="$attr->{$attr_name}" ]
+                                    if $attr->{$attr_name} =~ $regex;
+                            }
+                        }
+                        else {
+                            if ( exists $attr->{$attribute} ) {
+                                $more .= qq[ $attribute="$attr->{$attribute}" ]
+                                    unless $attribute eq q{/};
+                            }
                         }
                     }
 
@@ -305,6 +314,26 @@ behaviour by supplying your own tag rules.
     my $processed = $hr->process( $html );
 
     # $processed now equals: <b>hello</b> <img src="pic.jpg" alt="me" />
+
+    # you can also specify a regex to be tested against the attribute value
+    my $hr = HTML::Restrict->new(
+        rules => {
+            iframe => [
+                qw( width height allowfullscreen ),
+                [ src         => qr{^http://www\.youtube\.com} ],
+                [ frameborder => qr{^(0|1)$} ],
+            ],
+            img    => [
+                qw( alt ),
+                [ src => qr{^/my/images/} ],
+            ],
+        },
+    );
+
+    my $html = '<img src="http://www.example.com/image.jpg" alt="Alt Text">';
+    my $processed = $hr->process( $html );
+
+    # $processed now equals: <img alt="Alt Text">
 
 =head1 CONSTRUCTOR AND STARTUP
 
