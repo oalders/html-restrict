@@ -110,4 +110,10 @@ cmp_ok( $hr->process( '000' ), 'eq', '000', "untrue values not processed");
 
 ok( !$hr->process("<html>"), "process only HTML" );
 
+
+# bugfix: check URI scheme for "src" attributes
+$hr = HTML::Restrict->new( rules => { img => [qw( src )] } );
+$hr->set_uri_schemes( [ undef, 'http', 'https' ] );
+cmp_ok( $hr->process('<img src="file:/some/file">'), 'eq', '<img>' );
+
 done_testing();
