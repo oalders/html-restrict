@@ -248,6 +248,9 @@ sub process {
     }
     $self->_processed( $text );
 
+    # ensure stripper stack is reset in case of broken html
+    $self->_stripper_stack([ ]);
+
     return $self->_processed;
 
 }

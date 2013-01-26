@@ -116,4 +116,10 @@ $hr = HTML::Restrict->new( rules => { img => [qw( src )] } );
 $hr->set_uri_schemes( [ undef, 'http', 'https' ] );
 cmp_ok( $hr->process('<img src="file:/some/file">'), 'eq', '<img>' );
 
+# bugfix: ensure stripper stack is reset in case of broken html
+$hr = HTML::Restrict->new;
+$hr->strip_enclosed_content( ['script'] );
+$hr->process('<script < b >');
+cmp_ok($hr->process('some text'), 'eq', 'some text', "stripper stack reset");
+
 done_testing();
