@@ -110,4 +110,12 @@ cmp_ok( $hr->process( '000' ), 'eq', '000', "untrue values not processed");
 
 ok( !$hr->process("<html>"), "process only HTML" );
 
+
+# bugfix: ensure stripper stack is reset in case of broken html
+$hr = HTML::Restrict->new;
+$hr->strip_enclosed_content( ['script'] );
+$hr->process('<script < b >');
+cmp_ok($hr->process('some text'), 'eq', 'some text', "stripper stack reset");
+
+
 done_testing();
