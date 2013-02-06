@@ -120,8 +120,7 @@ sub _build_parser {
 
                     foreach my $source_type ( 'href', 'src' ) {
 
-                        if ( exists $attr->{$source_type}
-                            && $attr->{href} )
+                        if ( $attr->{$source_type} )
                         {
                             my $uri = URI->new( $attr->{$source_type} );
                             if (defined $uri->scheme) {
