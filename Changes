@@ -1,5 +1,25 @@
 Revision history for HTML-Restrict
 
+2.0.0   2013-02-27
+        - Bumps version to 2.0.0 due to new features breaking backwards
+          compatibility.
+        - Forces all tag rules to be provided in lower case.  Breaks
+          backcompat, but mixed or upper case rules would have been silently
+          ignored.  So, this is really a bug fix.
+        - Strips content between script tags by default. Breaks backcompat,
+          but the default behaviour was likely not what anyone wanted.
+        - Strips content between style tags by default.  Breaks backcompat,
+          but the default behaviour was likely not what anyone wanted.
+        - Adds Pod for previously undocumented allow_comments,
+          allow_declaration and strip_enclosed_content.
+        - Ensures stripper stack is always reset (perlpong).
+        - Protects against undef string comparison (perlpong).
+        - Checks URI scheme for src attributes (perlpong).
+        - Removes accessor/mutator documentation.  Would prefer if all params
+          were set at object instatiation.
+        - Adds ridiculously basic example script.
+
+
 1.0.4   2012-05-22
         - Explicity require MooX::Types::MooseLike rather than
           MooX::Types::MooseLike::Base (Matt Phillips/Github #2)
