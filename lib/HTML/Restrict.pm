@@ -337,6 +337,13 @@ HTML::Restrict recognizes:
 
 =item * C<< rules => \%rules >>
 
+Sets the rules which will be used to process your data.  By default all HTML
+tags are off limits.  Use this argument to define the HTML elements and
+corresponding attributes you'd like to use.  Essentially, consider the default
+behaviour to be:
+
+    rules => {}
+
 Rules should be passed as a HASHREF of allowed tags.  Each hash value should
 represent the allowed attributes for the listed tag.  For example, if you want
 to allow a fair amount of HTML, you can try something like this:
@@ -409,6 +416,15 @@ element order you don't need to pay any attention to this, but you should be
 aware that your elements are being reconstructed rather than just stripped
 down.
 
+Also note that all tag and attribute names must be supplied in lower case.
+
+    # correct
+    my $hr = HTML::Restrict->new( rules => { body => ['onload'] } );
+
+    # throws a fatal error
+    my $hr = HTML::Restrict->new( rules => { Body => ['onLoad'] } );
+
+
 =item * C<< trim => [0|1] >>
 
 By default all leading and trailing spaces will be removed when text is
@@ -442,78 +458,7 @@ the defaults in any changes you make, should you wish to keep them:
     # defaults + irc + mailto
     uri_schemes => [ 'undef', 'http', 'https', 'irc', 'mailto' ]
 
-=back
-
-=head1 SUBROUTINES/METHODS
-
-=head2 process( $html )
-
-This is the method which does the real work.  It parses your data, removes any
-tags and attributes which are not specifically allowed and returns the
-resulting text.  Requires and returns a SCALAR.
-
-=head2 get_rules
-
-An accessor method, which returns a HASHREF of allowed tags and their allowed
-attributes.  Returns an empty HASHREF by default, since the default behaviour
-is to disallow all HTML.
-
-=head2 get_uri_schemes
-
-Accessor method which returns an ARRAYREF of allowed URI schemes.
-
-=head2 set_rules( \%rules )
-
-Sets the rules which will be used to process your data.  By default all HTML
-tags are off limits.  Use this method to define the HTML elements and
-corresponding attributes you'd like to use.
-
-If you only need to set rules once, you might want to pass them to the new()
-method when constructing the object, but you may also set your rules using
-set_rules().  If you want to apply different rules to different data without
-creating a new object each time, set_rules() will handle changing the object's
-behaviour for you.
-
-Please note that set_rules is a mutator method, so your changes are not
-cumulative.  The last rules passed to the set_rules method are the rules which
-will be applied to your data when it is processed.
-
-For example:
-
-    # create object which allows only a and img tags
-    my $hr = HTML::Restrict->new( rules => { a => [ ...], img => [ ... ] } );
-
-    # return to defaults (no HTML allowed)
-    $hr->set_rules({});
-
-Also note that all tag and attribute names must be supplied in lower case.
-
-    # correct
-    my $hr = HTML::Restrict->new( rules => { body => ['onload'] } );
-
-    # throws a fatal error
-    my $hr = HTML::Restrict->new( rules => { Body => ['onLoad'] } );
-
-
-=head2 set_uri_schemes
-
-Override existing URI schemes:
-
-    $hr->set_uri_schemes([ 'http', 'https', undef, 'ftp' ]);
-
-=head2 trim( 0|1 )
-
-By default all leading and trailing spaces will be removed when text is
-processed.  Set this value to 0 in order to disable this behaviour.
-
-For example, to allow leading and trailing whitespace:
-
-    $hr->trim( 0 );
-    my $trimmed = $hr->process('  <b>i am bold</b>  ');
-
-    # $trimmed now equals: '  i am bold  '
-
-=head2 allow_declaration
+=item * allow_declaration => [0|1]
 
 Set this value to true if you'd like to allow/preserve DOCTYPE declarations in
 your content.  Useful when cleaning up your own static files or templates. This
@@ -521,11 +466,11 @@ feature is off by default.
 
     my $html = q[<!doctype html><body>foo</body>];
 
-    $hr->allow_declaration( 1 );
+    my $hr = HTML::Restrict->new( allow_declaration => 1 );
     $html = $hr->process( $html );
     # $html is now: "<!doctype html>foo"
 
-=head2 allow_comments
+=item * allow_comments => [0|1]
 
 Set this value to true if you'd like to allow/preserve HTML comments in your
 content.  Useful when cleaning up your own static files or templates. This
@@ -533,11 +478,11 @@ feature is off by default.
 
     my $html = q[<body><!-- comments! -->foo</body>];
 
-    $hr->allow_comments( 1 );
+    my $hr = HTML::Restrict->new( allow_comments => 1 );
     $html = $hr->process( $html );
     # $html is now: "<!-- comments! -->foo"
 
-=head2 strip_enclosed_content
+=item * strip_enclosed_content => [0|1]
 
 The default behaviour up to 1.0.4 was to preserve the content between script
 and style tags, even when the tags themselves were being deleted.  So, you'd be
@@ -550,7 +495,10 @@ HTML::Restrict to purge your own HTML you can be more restrictive.
 
     # strip the head section, in addition to JS and CSS
     my $html = '<html><head>...</head><body>...<script>JS here</script>foo';
-    $hr->strip_enclosed_content( ['script','style','head'] );
+
+    my $hr = HTML::Restrict->new(
+        strip_enclosed_content => [ 'script', 'style', 'head' ]
+    );
 
     $html = $hr->process( $html );
     # $html is now '<html><body>...foo';
@@ -564,6 +512,16 @@ Keep in mind that changes to strip_enclosed_content are not additive, so if you
 are adding additional tags you'll need to include the entire list of tags whose
 enclosed content you'd like to remove.  This feature strips script and style
 tags by default.
+
+=back
+
+=head1 SUBROUTINES/METHODS
+
+=head2 process( $html )
+
+This is the method which does the real work.  It parses your data, removes any
+tags and attributes which are not specifically allowed and returns the
+resulting text.  Requires and returns a SCALAR.
 
 =head1 MOTIVATION
 
