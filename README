@@ -28,6 +28,27 @@ SYNOPSIS
 
         # $processed now equals: <b>hello</b> <img src="pic.jpg" alt="me" />
 
+        # you can also specify a regex to be tested against the attribute value
+        my $hr = HTML::Restrict->new(
+            rules => {
+                iframe => [
+                    qw( width height allowfullscreen ),
+                    {   src         => qr{^http://www\.youtube\.com},
+                        frameborder => qr{^(0|1)$},
+                    }
+                ],
+                img    => [
+                    qw( alt ),
+                    { src => qr{^/my/images/} },
+                ],
+            },
+        );
+
+        my $html = '<img src="http://www.example.com/image.jpg" alt="Alt Text">';
+        my $processed = $hr->process( $html );
+
+        # $processed now equals: <img alt="Alt Text">
+
 DESCRIPTION
     This module uses *HTML::Parser* to strip HTML from text in a restrictive
     manner. By default all HTML is restricted. You may alter the default
