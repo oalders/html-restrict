@@ -332,26 +332,6 @@ behaviour by supplying your own tag rules.
 
     # $processed now equals: <b>hello</b> <img src="pic.jpg" alt="me" />
 
-    # you can also specify a regex to be tested against the attribute value
-    my $hr = HTML::Restrict->new(
-        rules => {
-            iframe => [
-                qw( width height allowfullscreen ),
-                {   src         => qr{^http://www\.youtube\.com},
-                    frameborder => qr{^(0|1)$},
-                }
-            ],
-            img    => [
-                qw( alt ),
-                { src => qr{^/my/images/} },
-            ],
-        },
-    );
-
-    my $html = '<img src="http://www.example.com/image.jpg" alt="Alt Text">';
-    my $processed = $hr->process( $html );
-
-    # $processed now equals: <img alt="Alt Text">
 
 =head1 CONSTRUCTOR AND STARTUP
 
@@ -453,13 +433,25 @@ element order you don't need to pay any attention to this, but you should be
 aware that your elements are being reconstructed rather than just stripped
 down.
 
-Also note that all tag and attribute names must be supplied in lower case.
+As of 2.0.1, you can also specify a regex to be tested against the attribute
+value. This feature should be considered experimental for the time being:
 
-    # correct
-    my $hr = HTML::Restrict->new( rules => { body => ['onload'] } );
+    my $hr = HTML::Restrict->new(
+        rules => {
+            iframe => [
+                qw( width height allowfullscreen ),
+                {   src         => qr{^http://www\.youtube\.com},
+                    frameborder => qr{^(0|1)$},
+                }
+            ],
+            img => [ qw( alt ), { src => qr{^/my/images/} }, ],
+        },
+    );
 
-    # throws a fatal error
-    my $hr = HTML::Restrict->new( rules => { Body => ['onLoad'] } );
+    my $html = '<img src="http://www.example.com/image.jpg" alt="Alt Text">';
+    my $processed = $hr->process( $html );
+
+    # $processed now equals: <img alt="Alt Text">
 
 
 =item * C<< trim => [0|1] >>
@@ -559,6 +551,17 @@ tags by default.
 This is the method which does the real work.  It parses your data, removes any
 tags and attributes which are not specifically allowed and returns the
 resulting text.  Requires and returns a SCALAR.
+
+=head1 CAVEATS
+
+Please note that all tag and attribute names passed via the rules param must be
+supplied in lower case.
+
+    # correct
+    my $hr = HTML::Restrict->new( rules => { body => ['onload'] } );
+
+    # throws a fatal error
+    my $hr = HTML::Restrict->new( rules => { Body => ['onLoad'] } );
 
 =head1 MOTIVATION
 
