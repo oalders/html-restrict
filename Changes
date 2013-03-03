@@ -1,5 +1,8 @@
 Revision history for HTML-Restrict
 
+2.1.0   2013-03-02
+        - Allows attributes to be validated against regexes (perlpong).
+
 2.0.0   2013-02-27
         - Bumps version to 2.0.0 due to new features breaking backwards
           compatibility.

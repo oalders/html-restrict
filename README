@@ -2,7 +2,7 @@ NAME
     HTML::Restrict - Strip unwanted HTML tags and attributes
 
 VERSION
-    version 2.0.0
+    version 2.1.0
 
 SYNOPSIS
         use HTML::Restrict;
@@ -28,29 +28,8 @@ SYNOPSIS
 
         # $processed now equals: <b>hello</b> <img src="pic.jpg" alt="me" />
 
-        # you can also specify a regex to be tested against the attribute value
-        my $hr = HTML::Restrict->new(
-            rules => {
-                iframe => [
-                    qw( width height allowfullscreen ),
-                    {   src         => qr{^http://www\.youtube\.com},
-                        frameborder => qr{^(0|1)$},
-                    }
-                ],
-                img    => [
-                    qw( alt ),
-                    { src => qr{^/my/images/} },
-                ],
-            },
-        );
-
-        my $html = '<img src="http://www.example.com/image.jpg" alt="Alt Text">';
-        my $processed = $hr->process( $html );
-
-        # $processed now equals: <img alt="Alt Text">
-
 DESCRIPTION
-    This module uses *HTML::Parser* to strip HTML from text in a restrictive
+    This module uses HTML::Parser to strip HTML from text in a restrictive
     manner. By default all HTML is restricted. You may alter the default
     behaviour by supplying your own tag rules.
 
@@ -120,7 +99,7 @@ CONSTRUCTOR AND STARTUP
             );
             my $hr = HTML::Restrict->new( rules => \%rules );
 
-        Since *HTML::Parser* treats a closing slash as an attribute, you'll
+        Since HTML::Parser treats a closing slash as an attribute, you'll
         need to add "/" to your list of allowed attributes if you'd like
         your tags to retain closing slashes. For example:
 
@@ -152,14 +131,26 @@ CONSTRUCTOR AND STARTUP
         this, but you should be aware that your elements are being
         reconstructed rather than just stripped down.
 
-        Also note that all tag and attribute names must be supplied in lower
-        case.
+        As of 2.1.0, you can also specify a regex to be tested against the
+        attribute value. This feature should be considered experimental for
+        the time being:
 
-            # correct
-            my $hr = HTML::Restrict->new( rules => { body => ['onload'] } );
+            my $hr = HTML::Restrict->new(
+                rules => {
+                    iframe => [
+                        qw( width height allowfullscreen ),
+                        {   src         => qr{^http://www\.youtube\.com},
+                            frameborder => qr{^(0|1)$},
+                        }
+                    ],
+                    img => [ qw( alt ), { src => qr{^/my/images/} }, ],
+                },
+            );
 
-            # throws a fatal error
-            my $hr = HTML::Restrict->new( rules => { Body => ['onLoad'] } );
+            my $html = '<img src="http://www.example.com/image.jpg" alt="Alt Text">';
+            my $processed = $hr->process( $html );
+
+            # $processed now equals: <img alt="Alt Text">
 
     *   "trim => [0|1]"
 
@@ -260,6 +251,16 @@ SUBROUTINES/METHODS
     This is the method which does the real work. It parses your data,
     removes any tags and attributes which are not specifically allowed and
     returns the resulting text. Requires and returns a SCALAR.
+
+CAVEATS
+    Please note that all tag and attribute names passed via the rules param
+    must be supplied in lower case.
+
+        # correct
+        my $hr = HTML::Restrict->new( rules => { body => ['onload'] } );
+
+        # throws a fatal error
+        my $hr = HTML::Restrict->new( rules => { Body => ['onLoad'] } );
 
 MOTIVATION
     There are already several modules on the CPAN which accomplish much of

@@ -303,7 +303,7 @@ sub _delete_tag_from_stack {
 
 =head1 DESCRIPTION
 
-This module uses I<HTML::Parser> to strip HTML from text in a restrictive
+This module uses L<HTML::Parser> to strip HTML from text in a restrictive
 manner.  By default all HTML is restricted.  You may alter the default
 behaviour by supplying your own tag rules.
 
@@ -402,7 +402,7 @@ Allow bolded text, images and some (but not all) image attributes:
     );
     my $hr = HTML::Restrict->new( rules => \%rules );
 
-Since I<HTML::Parser> treats a closing slash as an attribute, you'll need to
+Since L<HTML::Parser> treats a closing slash as an attribute, you'll need to
 add "/" to your list of allowed attributes if you'd like your tags to retain
 closing slashes.  For example:
 
@@ -433,7 +433,7 @@ element order you don't need to pay any attention to this, but you should be
 aware that your elements are being reconstructed rather than just stripped
 down.
 
-As of 2.0.1, you can also specify a regex to be tested against the attribute
+As of 2.1.0, you can also specify a regex to be tested against the attribute
 value. This feature should be considered experimental for the time being:
 
     my $hr = HTML::Restrict->new(
