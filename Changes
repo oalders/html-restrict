@@ -1,5 +1,8 @@
 Revision history for HTML-Restrict
 
+2.1.1   2013-03-08
+        - Updates Pod.
+
 2.1.0   2013-03-02
         - Allows attributes to be validated against regexes (perlpong).
 
