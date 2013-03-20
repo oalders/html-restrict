@@ -16,8 +16,8 @@ print $hr->process( $text );
 
 =pod
 
-=SYNPOSIS
+=head1 SYNOPSIS
 
     perl sanitize_file path/to/filename > path/to/sanitized/file
 
-=end
+=cut
