@@ -7,6 +7,8 @@ use HTML::Restrict;
 my $hr = HTML::Restrict->new(
     rules => {
         a => [qw( href )],
+        img => [qw( src /)],
+        blockquote => [qw( cite )],
     },
 );
 
@@ -40,6 +42,18 @@ cmp_ok(
     $hr->process( '<a href="file://example.com">link</a>' ),
         'eq', '<a>link</a>',
     'file scheme removed',
+);
+
+cmp_ok(
+    $hr->process( '<img src="javascript:evil_fc()" />' ),
+        'eq', '<img />',
+    'img src with javascript removed',
+);
+
+cmp_ok(
+    $hr->process( '<blockquote cite="javascript:evil_fc()">blockquote</blockquote>' ),
+        'eq', '<blockquote>blockquote</blockquote>',
+    'blockquote cite with javascript removed',
 );
 
 # disable relative schemes

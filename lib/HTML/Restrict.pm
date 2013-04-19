@@ -123,7 +123,7 @@ sub _build_parser {
                 if ( any( keys %{ $self->get_rules } ) eq $tagname ) {
                     print dump $attr if $self->debug;
 
-                    foreach my $source_type ( 'href', 'src' ) {
+                    foreach my $source_type ( 'href', 'src', 'cite' ) {
 
                         if ( $attr->{$source_type} )
                         {
