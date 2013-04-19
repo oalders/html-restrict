@@ -2,7 +2,7 @@ NAME
     HTML::Restrict - Strip unwanted HTML tags and attributes
 
 VERSION
-    version 2.1.2
+    version 2.1.3
 
 SYNOPSIS
         use HTML::Restrict;
@@ -212,6 +212,23 @@ CONSTRUCTOR AND STARTUP
             my $hr = HTML::Restrict->new( allow_comments => 1 );
             $html = $hr->process( $html );
             # $html is now: "<!-- comments! -->foo"
+
+    *   replace_img => [0|1|CodeRef]
+
+        Set the value to true if you'd like to have img tags replaced with
+        "[IMAGE: ...]" containing the alt attribute text. If you set it to a
+        code reference, you can provide your own replacement (which may even
+        contain HTML).
+
+            sub replacer {
+                my ($tagname, $attr, $text) = @_; # from HTML::Parser
+                return qq{<a href="$attr->{src}">IMAGE: $attr->{alt}</a>};
+            }
+
+            my $hr = HTML::Restrict->new( replace_img => \&replacer );
+
+        This attribute will only take effect if the img tag is not included
+        in the allowed HTML.
 
     *   strip_enclosed_content => [0|1]
 
