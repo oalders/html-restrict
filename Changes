@@ -1,5 +1,10 @@
 Revision history for HTML-Restrict
 
+2.1.4   2013-04-19
+        - Minor version should have been bumped in previous release. To bump it
+          now would be confusing.
+        - Require Moo 1.001000 as 1.000008 breaks this module.
+
 2.1.3   2013-04-18
         - Add replace_img feature (David Golden).
         - Add 'cite' to list of attributes for URI scheme checks (David

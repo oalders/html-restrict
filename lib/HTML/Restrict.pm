@@ -2,7 +2,7 @@ use strict;
 
 package HTML::Restrict;
 
-use Moo;
+use Moo 1.001000;
 
 use Carp qw( croak );
 use Data::Dump qw( dump );
