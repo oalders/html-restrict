@@ -1,5 +1,8 @@
 Revision history for HTML-Restrict
 
+2.1.5   2013-05-01
+        - Eliminates a circular reference. (Graham TerMarsch)
+
 2.1.4   2013-04-19
         - Minor version should have been bumped in previous release. To bump it
           now would be confusing.

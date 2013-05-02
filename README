@@ -2,7 +2,7 @@ NAME
     HTML::Restrict - Strip unwanted HTML tags and attributes
 
 VERSION
-    version 2.1.4
+    version 2.1.5
 
 SYNOPSIS
         use HTML::Restrict;
@@ -316,6 +316,10 @@ ACKNOWLEDGEMENTS
     Arthur Axel 'fREW' Schmidt
 
     perlpong
+
+    David Golden
+
+    Graham TerMarsch
 
 AUTHOR
     Olaf Alders <olaf@wundercounter.com>
