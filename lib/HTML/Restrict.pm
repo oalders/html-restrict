@@ -32,9 +32,10 @@ has 'debug' => (
 );
 
 has 'parser' => (
-    is      => 'ro',
-    lazy    => 1,
-    builder => '_build_parser',
+    is       => 'ro',
+    lazy     => 1,
+    builder  => '_build_parser',
+    weak_ref => 1,
 );
 
 has 'rules' => (
