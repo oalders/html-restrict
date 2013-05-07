@@ -2,7 +2,7 @@ use strict;
 
 package HTML::Restrict;
 
-use Moo 1.001000;
+use Moo 1.002000;
 
 use Carp qw( croak );
 use Data::Dump qw( dump );
@@ -16,19 +16,19 @@ use URI;
 has 'allow_comments' => (
     is      => 'rw',
     isa     => Bool,
-    default => quote_sub( q{ 0 } ),
+    default => 0,
 );
 
 has 'allow_declaration' => (
     is      => 'rw',
     isa     => Bool,
-    default => quote_sub( q{ 0 } ),
+    default => 0,
 );
 
 has 'debug' => (
     is      => 'rw',
     isa     => Bool,
-    default => quote_sub( q{ 0 } ),
+    default => 0,
 );
 
 has 'parser' => (
@@ -62,7 +62,7 @@ has 'replace_img' => (
 has 'trim' => (
     is      => 'rw',
     isa     => Bool,
-    default => quote_sub( q{ 1 } ),
+    default => 1,
 );
 
 has 'uri_schemes' => (
