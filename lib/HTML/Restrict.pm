@@ -9,7 +9,7 @@ use Data::Dump qw( dump );
 use HTML::Parser;
 use Perl6::Junction qw( any none );
 use MooX::Types::MooseLike::Base qw(Bool HashRef ArrayRef CodeRef AnyOf);
-use Scalar::Util qw( reftype );
+use Scalar::Util qw( reftype weaken );
 use Sub::Quote 'quote_sub';
 use URI;
 
@@ -35,7 +35,6 @@ has 'parser' => (
     is       => 'ro',
     lazy     => 1,
     builder  => '_build_parser',
-    weak_ref => 1,
 );
 
 has 'rules' => (
@@ -119,6 +118,7 @@ sub _build_parser {
         }
     }
 
+    weaken( $self );
     return HTML::Parser->new(
 
         start_h => [
