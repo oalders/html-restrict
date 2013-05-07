@@ -321,6 +321,8 @@ sub _delete_tag_from_stack {
 
 =pod
 
+=encoding utf8
+
 =head1 DESCRIPTION
 
 This module uses L<HTML::Parser> to strip HTML from text in a restrictive
@@ -630,7 +632,7 @@ L<HTML::Detoxifier>, L<HTML::Sanitizer>, L<HTML::Scrubber>
 Thanks to Raybec Communications L<http://www.raybec.com> for funding my
 work on this module and for releasing it to the world.
 
-Thanks also to the following for patches and bug reports:
+Thanks also to the following for patches, bug reports and assistance:
 
 Mark Jubenville (ioncache)
 
@@ -645,5 +647,11 @@ perlpong
 David Golden
 
 Graham TerMarsch
+
+Dagfinn Ilmari Mannsåker
+
+Graham Knop
+
+Carwyn Ellis
 
 =cut

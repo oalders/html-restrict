@@ -2,7 +2,7 @@ NAME
     HTML::Restrict - Strip unwanted HTML tags and attributes
 
 VERSION
-    version 2.1.5
+    version 2.1.6
 
 SYNOPSIS
         use HTML::Restrict;
@@ -305,7 +305,7 @@ ACKNOWLEDGEMENTS
     Thanks to Raybec Communications <http://www.raybec.com> for funding my
     work on this module and for releasing it to the world.
 
-    Thanks also to the following for patches and bug reports:
+    Thanks also to the following for patches, bug reports and assistance:
 
     Mark Jubenville (ioncache)
 
@@ -320,6 +320,12 @@ ACKNOWLEDGEMENTS
     David Golden
 
     Graham TerMarsch
+
+    Dagfinn Ilmari Mannsåker
+
+    Graham Knop
+
+    Carwyn Ellis
 
 AUTHOR
     Olaf Alders <olaf@wundercounter.com>
