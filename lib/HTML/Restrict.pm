@@ -2,13 +2,15 @@ use strict;
 
 package HTML::Restrict;
 
+use namespace::autoclean;
+
 use Moo 1.002000;
 
 use Carp qw( croak );
 use Data::Dump qw( dump );
 use HTML::Parser;
-use Perl6::Junction qw( any none );
 use MooX::Types::MooseLike::Base qw(Bool HashRef ArrayRef CodeRef AnyOf);
+use Perl6::Junction qw( any none );
 use Scalar::Util qw( reftype weaken );
 use Sub::Quote 'quote_sub';
 use URI;
