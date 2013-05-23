@@ -1,5 +1,9 @@
 Revision history for HTML-Restrict
 
+2.1.6   2013-05-06
+        - Fixes incorrect use of Moo's weak_ref. (Thanks to Carwyn Ellis,
+          Dagfinn Ilmari Mannsåker and Graham Knop for help with this.)
+
 2.1.5   2013-05-01
         - Eliminates a circular reference. (Graham TerMarsch)
 
