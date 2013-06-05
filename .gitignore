@@ -1,3 +1,5 @@
-*.komodoproject
-HTML-Restrict-*
 .build
+.carton/
+HTML-Restrict-*
+carton.lock
+local/
