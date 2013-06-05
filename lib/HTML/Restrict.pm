@@ -10,7 +10,7 @@ use Carp qw( croak );
 use Data::Dump qw( dump );
 use HTML::Parser;
 use MooX::Types::MooseLike::Base qw(Bool HashRef ArrayRef CodeRef AnyOf);
-use Perl6::Junction qw( any none );
+use List::MoreUtils qw( any none );
 use Scalar::Util qw( reftype weaken );
 use Sub::Quote 'quote_sub';
 use URI;
@@ -129,7 +129,7 @@ sub _build_parser {
                 print "starting tag:  $tagname", "\n" if $self->debug;
                 my $more = q{};
 
-                if ( any( keys %{ $self->get_rules } ) eq $tagname ) {
+                if ( any { $_ eq $tagname } keys %{ $self->get_rules } ) {
                     print dump $attr if $self->debug;
 
                     foreach my $source_type ( 'href', 'src', 'cite' ) {
@@ -139,9 +139,8 @@ sub _build_parser {
                             my $uri = URI->new( $attr->{$source_type} );
                             if (defined $uri->scheme) {
                                 delete $attr->{$source_type}
-                                    if none(
-                                        grep defined, @{ $self->get_uri_schemes }
-                                    ) eq $uri->scheme;
+                                    if none { $_ eq $uri->scheme }
+                                    grep defined, @{ $self->get_uri_schemes };
                             }
                             else {  # relative uri
                                 delete $attr->{$source_type}
@@ -195,7 +194,7 @@ sub _build_parser {
                     $self->_processed( ( $self->_processed || q{} ) . $alt );
                 }
                 elsif (
-                    any( @{ $self->strip_enclosed_content } ) eq $tagname )
+                    any { $_ eq $tagname } @{ $self->strip_enclosed_content } )
                 {
                     print "adding $tagname to strippers" if $self->debug;
                     push @{ $self->_stripper_stack }, $tagname;
@@ -209,11 +208,11 @@ sub _build_parser {
             sub {
                 my ( $p, $tagname, $attr, $text ) = @_;
                 print "end: $text\n" if $self->debug;
-                if ( any( keys %{ $self->get_rules } ) eq $tagname ) {
+                if ( any { $_ eq $tagname } keys %{ $self->get_rules } ) {
                     $self->_processed( ( $self->_processed || q{} ) . $text );
                 }
                 elsif (
-                    any( @{ $self->_stripper_stack } ) eq $tagname )
+                    any { $_ eq $tagname } @{ $self->_stripper_stack } )
                 {
                     $self->_delete_tag_from_stack( $tagname );
                 }
