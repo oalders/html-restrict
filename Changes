@@ -1,5 +1,8 @@
 Revision history for HTML-Restrict
 
+2.1.7   2013-06-05
+        - Removes Perl6::Junction in order to squash smartmatch warnings.
+
 2.1.6   2013-05-06
         - Fixes incorrect use of Moo's weak_ref. (Thanks to Carwyn Ellis,
           Dagfinn Ilmari Mannsåker and Graham Knop for help with this.)
