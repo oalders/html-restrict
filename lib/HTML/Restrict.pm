@@ -2,10 +2,6 @@ use strict;
 
 package HTML::Restrict;
 
-use namespace::autoclean;
-
-use Moo 1.002000;
-
 use Carp qw( croak );
 use Data::Dump qw( dump );
 use HTML::Parser;
@@ -14,6 +10,9 @@ use List::MoreUtils qw( any none );
 use Scalar::Util qw( reftype weaken );
 use Sub::Quote 'quote_sub';
 use URI;
+
+use Moo 1.002000;
+use namespace::clean;
 
 has 'allow_comments' => (
     is      => 'rw',

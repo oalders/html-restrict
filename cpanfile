@@ -9,4 +9,4 @@ requires 'Sub::Quote';
 requires 'Test::Fatal';
 requires 'Test::More';
 requires 'URI';
-requires 'namespace::autoclean';
+requires 'namespace::clean';
