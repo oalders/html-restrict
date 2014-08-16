@@ -1,6 +1,15 @@
 Revision history for HTML-Restrict
 
+{{$NEXT}}
         - Replace MooX::Types::MooseLike with Type::Tiny.
+
+2.2.0   2014-08-15 23:01:22EDT-0400 America/Toronto
+        - Fix Changes file
+        - Bump to next minor version rather than changing the format of the
+          version numbers
+
+2.1.9   2013-12-10
+        - Swaps namespace::clean for namespace::autoclean. (Fitz Elliott)
 
 2.1.8   2013-06-06
         - Unlike 2.1.7, This release doesn't contain a local::lib.
