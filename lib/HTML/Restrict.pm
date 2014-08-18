@@ -5,7 +5,7 @@ package HTML::Restrict;
 use Carp qw( croak );
 use Data::Dump qw( dump );
 use HTML::Parser;
-use MooX::Types::MooseLike::Base qw(Bool HashRef ArrayRef CodeRef AnyOf);
+use Types::Standard qw[ Bool HashRef ArrayRef CodeRef ];
 use List::MoreUtils qw( any none );
 use Scalar::Util qw( reftype weaken );
 use Sub::Quote 'quote_sub';
@@ -56,7 +56,7 @@ has 'strip_enclosed_content' => (
 
 has 'replace_img' => (
     is      => 'rw',
-    isa     => AnyOf[Bool, CodeRef],
+    isa     =>  Bool | CodeRef,
     default => 0,
 );
 
