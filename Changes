@@ -1,5 +1,7 @@
 Revision history for HTML-Restrict
 
+        - Replace MooX::Types::MooseLike with Type::Tiny.
+
 2.1.8   2013-06-06
         - Unlike 2.1.7, This release doesn't contain a local::lib.
 
