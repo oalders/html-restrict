@@ -1,7 +1,7 @@
 Revision history for HTML-Restrict
 
 {{$NEXT}}
-        - Replace MooX::Types::MooseLike with Type::Tiny.
+        - Replace MooX::Types::MooseLike with Type::Tiny. (Samuel Kaufman)
 
 2.2.0   2014-08-15 23:01:22EDT-0400 America/Toronto
         - Fix Changes file
