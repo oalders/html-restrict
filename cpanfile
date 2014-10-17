@@ -1,5 +1,6 @@
 requires "Carp" => "0";
 requires "Data::Dump" => "0";
+requires "HTML::Entities" => "0";
 requires "HTML::Parser" => "0";
 requires "List::MoreUtils" => "0";
 requires "Moo" => "1.002000";

@@ -1,6 +1,7 @@
 Revision history for HTML-Restrict
 
 {{$NEXT}}
+        - Fixes attribute value encoding. (Graham Knop)
 
 2.2.1     2014-08-18 17:22:05EDT-0400 America/Toronto
         - Replace MooX::Types::MooseLike with Type::Tiny. (Samuel Kaufman)
