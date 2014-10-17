@@ -10,6 +10,7 @@ requires "Type::Tiny" => "1.000001";
 requires "Types::Standard" => "0";
 requires "URI" => "0";
 requires "namespace::clean" => "0";
+requires "perl" => "5.006";
 requires "strict" => "0";
 
 on 'build' => sub {

@@ -1,4 +1,5 @@
 use strict;
+use 5.006;
 
 package HTML::Restrict;
 
