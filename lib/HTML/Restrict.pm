@@ -8,7 +8,7 @@ use Data::Dump qw( dump );
 use HTML::Parser;
 use HTML::Entities qw( encode_entities );
 use Types::Standard qw[ Bool HashRef ArrayRef CodeRef ];
-use List::MoreUtils qw( any none );
+use List::Util 1.33 qw( any none );
 use Scalar::Util qw( reftype weaken );
 use Sub::Quote 'quote_sub';
 use URI;
