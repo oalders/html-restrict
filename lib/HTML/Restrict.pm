@@ -7,7 +7,7 @@ use Carp qw( croak );
 use Data::Dump qw( dump );
 use HTML::Parser;
 use HTML::Entities qw( encode_entities );
-use Types::Standard qw[ Bool HashRef ArrayRef CodeRef ];
+use Types::Standard 1.000001 qw[ Bool HashRef ArrayRef CodeRef ];
 use List::Util 1.33 qw( any none );
 use Scalar::Util qw( reftype weaken );
 use Sub::Quote 'quote_sub';
