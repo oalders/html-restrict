@@ -1,6 +1,7 @@
 Revision history for HTML-Restrict
 
 {{$NEXT}}
+        - Now with fewer non-core prerequisites (Karen Etheridge)
 
 2.2.2     2014-10-16 22:16:29-04:00 America/Toronto
         - Fixes attribute value encoding. (Graham Knop)
