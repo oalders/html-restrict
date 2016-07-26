@@ -1,5 +1,6 @@
 .build
 .carton/
-HTML-Restrict-*
 carton.lock
+HTML-Restrict-*
 local/
+.tidyall.d/
