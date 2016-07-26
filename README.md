@@ -271,6 +271,14 @@ This is the method which does the real work.  It parses your data, removes any
 tags and attributes which are not specifically allowed and returns the
 resulting text.  Requires and returns a SCALAR.
 
+## get\_rules
+
+Accessor which returns a hash ref of the current rule set.
+
+## get\_uri\_schemes
+
+Accessor which returns an array ref of the current valid uri schemes.
+
 # CAVEATS
 
 Please note that all tag and attribute names passed via the rules param must be
