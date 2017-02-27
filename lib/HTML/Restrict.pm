@@ -633,8 +633,8 @@ The idea is to be up and running quickly.
 
 =head1 SEE ALSO
 
-L<HTML::TagFilter>, L<HTML::Defang>, L<HTML::Declaw>, L<HTML::StripScripts>,
-L<HTML::Detoxifier>, L<HTML::Sanitizer>, L<HTML::Scrubber>
+L<HTML::TagFilter>, L<HTML::Defang>, L<MojoMojo::Declaw>, L<HTML::StripScripts>,
+L<HTML::Detoxifier>, HTML::Sanitizer, L<HTML::Scrubber>
 
 
 =head1 ACKNOWLEDGEMENTS
