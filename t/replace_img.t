@@ -14,7 +14,7 @@ my @texts = (
     },
     {
         label => "<img ... ></img>",
-        html  => q{<img alt="foo bar" src="http://example.com/foo.jpg"></img>},
+        html => q{<img alt="foo bar" src="http://example.com/foo.jpg"></img>},
     },
 );
 
@@ -47,10 +47,15 @@ sub replacer {
 }
 
 for my $c (@cases) {
-    ok( my $hr = HTML::Restrict->new( debug => 0, %{ $c->{args} } ),
-        "$c->{label}: HTML::Restrict->new(...)" );
+    ok(
+        my $hr = HTML::Restrict->new( debug => 0, %{ $c->{args} } ),
+        "$c->{label}: HTML::Restrict->new(...)"
+    );
     for my $t (@texts) {
-        is( $hr->process( $t->{html} ), $c->{expect}, "$c->{label}: $t->{label}" );
+        is(
+            $hr->process( $t->{html} ), $c->{expect},
+            "$c->{label}: $t->{label}"
+        );
     }
 }
 

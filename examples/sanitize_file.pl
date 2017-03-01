@@ -9,10 +9,10 @@ use HTML::Restrict;
 my $filename = shift @ARGV;
 die "usage: perl $0 path/to/file > path/to/new/file" if !$filename;
 
-my $text = read_file( $filename );
+my $text = read_file($filename);
 
 my $hr = HTML::Restrict->new;
-print $hr->process( $text );
+print $hr->process($text);
 
 =pod
 

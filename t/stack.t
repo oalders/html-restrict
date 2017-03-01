@@ -9,7 +9,7 @@ my $hr = HTML::Restrict->new;
 ok( !@{ $hr->_stripper_stack }, "stack empty" );
 
 push @{ $hr->_stripper_stack }, 'script', 'style', 'pre', 'script';
-$hr->_delete_tag_from_stack( 'script' );
+$hr->_delete_tag_from_stack('script');
 is_deeply(
     $hr->_stripper_stack,
     [ 'script', 'style', 'pre' ],

@@ -35,16 +35,16 @@ has 'debug' => (
 );
 
 has 'parser' => (
-    is       => 'ro',
-    lazy     => 1,
-    builder  => '_build_parser',
+    is      => 'ro',
+    lazy    => 1,
+    builder => '_build_parser',
 );
 
 has 'rules' => (
     is       => 'rw',
     isa      => HashRef,
     required => 0,
-    default  => quote_sub( q{ {} } ),
+    default  => quote_sub(q{ {} }),
     trigger  => \&_build_parser,
     reader   => 'get_rules',
     writer   => 'set_rules',
@@ -53,12 +53,12 @@ has 'rules' => (
 has 'strip_enclosed_content' => (
     is      => 'rw',
     isa     => ArrayRef,
-    default => sub { ['script', 'style'] },
+    default => sub { [ 'script', 'style' ] },
 );
 
 has 'replace_img' => (
     is      => 'rw',
-    isa     =>  Bool | CodeRef,
+    isa     => Bool | CodeRef,
     default => 0,
 );
 
@@ -101,7 +101,7 @@ sub _build_parser {
 
     # don't allow any upper case tag or attribute names
     # these rules would otherwise silently be ignored
-    if ( $rules ) {
+    if ($rules) {
         foreach my $tag_name ( keys %{$rules} ) {
             if ( lc $tag_name ne $tag_name ) {
                 croak "All tag names must be lower cased";
@@ -110,8 +110,8 @@ sub _build_parser {
                 my @attr_names;
                 foreach my $attr_item ( @{ $rules->{$tag_name} } ) {
                     ref $attr_item eq 'HASH'
-                        ? push(@attr_names, keys(%$attr_item))
-                        : push(@attr_names, $attr_item);
+                        ? push( @attr_names, keys(%$attr_item) )
+                        : push( @attr_names, $attr_item );
                 }
                 for (@attr_names) {
                     croak "All attribute names must be lower cased"
@@ -121,7 +121,7 @@ sub _build_parser {
         }
     }
 
-    weaken( $self );
+    weaken($self);
     return HTML::Parser->new(
 
         start_h => [
@@ -135,39 +135,41 @@ sub _build_parser {
 
                     foreach my $source_type ( 'href', 'src', 'cite' ) {
 
-                        if ( $attr->{$source_type} )
-                        {
+                        if ( $attr->{$source_type} ) {
                             my $uri = URI->new( $attr->{$source_type} );
-                            if (defined $uri->scheme) {
+                            if ( defined $uri->scheme ) {
                                 delete $attr->{$source_type}
                                     if none { $_ eq $uri->scheme }
-                                    grep defined, @{ $self->get_uri_schemes };
+                                grep defined, @{ $self->get_uri_schemes };
                             }
-                            else {  # relative uri
+                            else {    # relative uri
                                 delete $attr->{$source_type}
                                     unless grep !defined,
-                                        @{ $self->get_uri_schemes };
+                                    @{ $self->get_uri_schemes };
                             }
                         }
                     }
 
                     foreach
-                        my $attr_item ( @{ $self->get_rules->{$tagname} } )
-                    {
-                        if (ref $attr_item eq 'HASH') {
+                        my $attr_item ( @{ $self->get_rules->{$tagname} } ) {
+                        if ( ref $attr_item eq 'HASH' ) {
+
                             # validate against regex contraints
-                            for my $attr_name (sort keys %$attr_item) {
+                            for my $attr_name ( sort keys %$attr_item ) {
                                 if ( exists $attr->{$attr_name} ) {
-                                    my $value = encode_entities($attr->{$attr_name});
+                                    my $value = encode_entities(
+                                        $attr->{$attr_name} );
                                     $more .= qq[ $attr_name="$value" ]
-                                        if $attr->{$attr_name} =~ $attr_item->{$attr_name};
+                                        if $attr->{$attr_name}
+                                        =~ $attr_item->{$attr_name};
                                 }
                             }
                         }
                         else {
                             my $attr_name = $attr_item;
                             if ( exists $attr->{$attr_name} ) {
-                                my $value = encode_entities($attr->{$attr_name});
+                                my $value
+                                    = encode_entities( $attr->{$attr_name} );
                                 $more .= qq[ $attr_name="$value" ]
                                     unless $attr_name eq q{/};
                             }
@@ -188,17 +190,19 @@ sub _build_parser {
                 elsif ( $tagname eq 'img' && $self->replace_img ) {
                     my $alt;
                     if ( ref $self->replace_img ) {
-                        $alt = $self->replace_img->($tagname, $attr, $text);
+                        $alt = $self->replace_img->( $tagname, $attr, $text );
                     }
                     else {
-                        $alt = defined( $attr->{alt} ) ? ": $attr->{alt}" : "";
+                        $alt
+                            = defined( $attr->{alt} ) ? ": $attr->{alt}" : "";
                         $alt = "[IMAGE$alt]";
                     }
                     $self->_processed( ( $self->_processed || q{} ) . $alt );
                 }
                 elsif (
-                    any { $_ eq $tagname } @{ $self->strip_enclosed_content } )
-                {
+                    any { $_ eq $tagname }
+                    @{ $self->strip_enclosed_content }
+                    ) {
                     print "adding $tagname to strippers" if $self->debug;
                     push @{ $self->_stripper_stack }, $tagname;
                 }
@@ -214,10 +218,8 @@ sub _build_parser {
                 if ( any { $_ eq $tagname } keys %{ $self->get_rules } ) {
                     $self->_processed( ( $self->_processed || q{} ) . $text );
                 }
-                elsif (
-                    any { $_ eq $tagname } @{ $self->_stripper_stack } )
-                {
-                    $self->_delete_tag_from_stack( $tagname );
+                elsif ( any { $_ eq $tagname } @{ $self->_stripper_stack } ) {
+                    $self->_delete_tag_from_stack($tagname);
                 }
 
             },
@@ -228,7 +230,7 @@ sub _build_parser {
             sub {
                 my ( $p, $text ) = @_;
                 print "text: $text\n" if $self->debug;
-                if ( !@{$self->_stripper_stack} ) {
+                if ( !@{ $self->_stripper_stack } ) {
                     $self->_processed( ( $self->_processed || q{} ) . $text );
                 }
             },
@@ -269,13 +271,13 @@ sub process {
     return if !@_;
     return $_[0] if !$_[0];
 
-    my ( $content ) = @_;
+    my ($content) = @_;
     die 'content must be a string!'
         unless ref( \$content ) eq 'SCALAR';
     $self->_clear_processed;
 
     my $parser = $self->parser;
-    $parser->parse( $content );
+    $parser->parse($content);
     $parser->eof;
 
     my $text = $self->_processed;
@@ -284,10 +286,10 @@ sub process {
         $text =~ s{\A\s*}{}gxms;
         $text =~ s{\s*\z}{}gxms;
     }
-    $self->_processed( $text );
+    $self->_processed($text);
 
     # ensure stripper stack is reset in case of broken html
-    $self->_stripper_stack([ ]);
+    $self->_stripper_stack( [] );
 
     return $self->_processed;
 
