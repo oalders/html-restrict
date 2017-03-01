@@ -6,7 +6,7 @@ HTML::Restrict - Strip unwanted HTML tags and attributes
 
 # VERSION
 
-version 2.2.3
+version 2.2.4
 
 # SYNOPSIS
 
@@ -309,8 +309,8 @@ The idea is to be up and running quickly.
 
 # SEE ALSO
 
-[HTML::TagFilter](https://metacpan.org/pod/HTML::TagFilter), [HTML::Defang](https://metacpan.org/pod/HTML::Defang), [HTML::Declaw](https://metacpan.org/pod/HTML::Declaw), [HTML::StripScripts](https://metacpan.org/pod/HTML::StripScripts),
-[HTML::Detoxifier](https://metacpan.org/pod/HTML::Detoxifier), [HTML::Sanitizer](https://metacpan.org/pod/HTML::Sanitizer), [HTML::Scrubber](https://metacpan.org/pod/HTML::Scrubber)
+[HTML::TagFilter](https://metacpan.org/pod/HTML::TagFilter), [HTML::Defang](https://metacpan.org/pod/HTML::Defang), [MojoMojo::Declaw](https://metacpan.org/pod/MojoMojo::Declaw), [HTML::StripScripts](https://metacpan.org/pod/HTML::StripScripts),
+[HTML::Detoxifier](https://metacpan.org/pod/HTML::Detoxifier), HTML::Sanitizer, [HTML::Scrubber](https://metacpan.org/pod/HTML::Scrubber)
 
 # ACKNOWLEDGEMENTS
 
@@ -345,7 +345,7 @@ Olaf Alders <olaf@wundercounter.com>
 
 # COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2013 by Olaf Alders.
+This software is copyright (c) 2013-2017 by Olaf Alders.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

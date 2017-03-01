@@ -1,6 +1,7 @@
 Revision history for HTML-Restrict
 
 {{$NEXT}}
+        - Updates SEE ALSO pod section (Ben Bullock)
 
 2.2.3     2016-07-26 18:00:55-04:00 America/Toronto
         - Now with fewer non-core prerequisites (Karen Etheridge)
