@@ -63,4 +63,13 @@ cmp_ok(
     'possible to maintain order',
 );
 
+cmp_ok(
+    $hr->process(
+        q[<iframe src="http://www.youtube.com/&quot; onclick=&quot;alert('hi')"></iframe>]
+    ),
+    'eq',
+    q[<iframe src="http://www.youtube.com/&quot; onclick=&quot;alert(&#39;hi&#39;)"></iframe>],
+    'entities are re-encoded when regex match passes',
+);
+
 done_testing;
