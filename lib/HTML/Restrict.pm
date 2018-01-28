@@ -13,6 +13,8 @@ use Scalar::Util qw( reftype weaken );
 use Sub::Quote 'quote_sub';
 use URI;
 
+use HTML::Restrict::Constraints;
+
 use Moo 1.002000;
 use namespace::clean;
 
@@ -42,7 +44,8 @@ has 'parser' => (
 
 has 'rules' => (
     is       => 'rw',
-    isa      => HashRef,
+    isa      => HTML::Restrict::Constraints::Rules,
+    coerce   => HTML::Restrict::Constraints::Rules->coercion,
     required => 0,
     default  => quote_sub(q{ {} }),
     trigger  => \&_build_parser,
@@ -480,6 +483,10 @@ value. This feature should be considered experimental for the time being:
 
     # $processed now equals: <img alt="Alt Text">
 
+You can also specify rules by rules plugin name providing full or short package name.
+In case of short one prefix HTML::Restrict::Rules will be used.
+
+Rules plugin name should provide method C<rules> returning hashref.
 
 =item * C<< trim => [0|1] >>
 
