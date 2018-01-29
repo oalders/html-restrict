@@ -25,6 +25,7 @@ on 'configure' => sub {
 };
 
 on 'develop' => sub {
+  requires 'Code::TidyAll::Plugin::SortLines::Naturally';
   requires "Pod::Coverage::TrustPod" => "0";
   requires "Test::CPAN::Changes" => "0.19";
   requires "Test::Code::TidyAll" => "0.50";
