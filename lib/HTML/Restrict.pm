@@ -162,7 +162,7 @@ sub _build_parser {
                             for my $attr_name (
                                 sort grep exists $attr->{$_},
                                 keys %$attr_item
-                                ) {
+                            ) {
                                 my $rule  = $attr_item->{$attr_name};
                                 my $value = $attr->{$attr_name};
                                 if ( ref $rule eq 'CODE' ) {
@@ -218,7 +218,7 @@ sub _build_parser {
                 elsif (
                     any { $_ eq $tagname }
                     @{ $self->strip_enclosed_content }
-                    ) {
+                ) {
                     print "adding $tagname to strippers" if $self->debug;
                     push @{ $self->_stripper_stack }, $tagname;
                 }

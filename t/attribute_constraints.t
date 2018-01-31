@@ -81,7 +81,7 @@ $hr = HTML::Restrict->new(
                     my @values;
                     while ( $value
                         =~ /(?:\A|;)\s*([a-z-]+)\s*:\s*([^;\n]+?)\s*(?=;|$)/gc
-                        ) {
+                    ) {
                         my ( $prop, $prop_value ) = ( $1, $2 );
                         if (   $prop =~ /\A(?:margin|padding)\z/
                             && $prop_value =~ /\A\d+(?:em|px|)\z/ ) {
