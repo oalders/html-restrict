@@ -3,6 +3,9 @@ use 5.006;
 
 package HTML::Restrict;
 
+use version;
+our $VERSION = 'v2.2.5';
+
 use Carp qw( croak );
 use Data::Dump qw( dump );
 use HTML::Parser;
