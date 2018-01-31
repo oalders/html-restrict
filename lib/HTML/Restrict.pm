@@ -8,13 +8,13 @@ our $VERSION = 'v2.2.5';
 
 use Carp qw( croak );
 use Data::Dump qw( dump );
-use HTML::Parser;
+use HTML::Parser ();
 use HTML::Entities qw( encode_entities );
 use Types::Standard 1.000001 qw[ Bool HashRef ArrayRef CodeRef ];
 use List::Util 1.33 qw( any none );
 use Scalar::Util qw( reftype weaken );
 use Sub::Quote 'quote_sub';
-use URI;
+use URI ();
 
 use Moo 1.002000;
 use namespace::clean;
