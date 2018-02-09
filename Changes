@@ -1,5 +1,7 @@
 Revision history for HTML-Restrict
 
+{{$NEXT}}
+
 v2.3.0    2018-02-09 16:00:41Z
         - Add code filters for attribute values (GH#27) (Graham Knop)
 
