@@ -87,7 +87,7 @@
          "web" : "https://github.com/oalders/html-restrict"
       }
    },
-   "version" : "v2.2.5",
+   "version" : "v2.3.0",
    "x_Dist_Zilla" : {
       "perl" : {
          "version" : "5.026001"
@@ -550,7 +550,7 @@
                "Dist::Zilla::Plugin::RewriteVersion::Transitional" : {}
             },
             "name" : "@Author::OALDERS/@Git::VersionManager/RewriteVersion::Transitional",
-            "version" : "0.008"
+            "version" : "0.009"
          },
          {
             "class" : "Dist::Zilla::Plugin::MetaProvides::Update",
@@ -609,7 +609,7 @@
                   "branch" : null,
                   "changelog" : "Changes",
                   "signed" : 0,
-                  "tag" : "vv2.2.5",
+                  "tag" : "vv2.3.0",
                   "tag_format" : "v%v",
                   "tag_message" : "v%v"
                },
@@ -638,7 +638,7 @@
                "Dist::Zilla::Plugin::BumpVersionAfterRelease::Transitional" : {}
             },
             "name" : "@Author::OALDERS/@Git::VersionManager/BumpVersionAfterRelease::Transitional",
-            "version" : "0.008"
+            "version" : "0.009"
          },
          {
             "class" : "Dist::Zilla::Plugin::NextRelease",

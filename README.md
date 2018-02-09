@@ -6,7 +6,7 @@ HTML::Restrict - Strip unwanted HTML tags and attributes
 
 # VERSION
 
-version v2.2.5
+version v2.3.0
 
 # SYNOPSIS
 
