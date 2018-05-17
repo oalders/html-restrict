@@ -11,6 +11,9 @@ before_install:
 cache:
   directories:
     - '~/perl5'
+env:
+  global:
+    - AUTHOR_TESTING=0
 language: perl
 matrix:
   allow_failures:
@@ -22,6 +25,9 @@ matrix:
   include:
     -
       env: COVERAGE=1
+      perl: '5.26'
+    -
+      env: AUTHOR_TESTING=1
       perl: '5.26'
 notifications:
   email:
