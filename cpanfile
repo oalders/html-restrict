@@ -44,5 +44,5 @@ on 'develop' => sub {
 };
 
 on 'develop' => sub {
-  recommends "Dist::Zilla::PluginBundle::Git::VersionManager" => "0.005";
+  recommends "Dist::Zilla::PluginBundle::Git::VersionManager" => "0.007";
 };
