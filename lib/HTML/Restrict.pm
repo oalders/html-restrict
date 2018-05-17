@@ -361,9 +361,7 @@ behaviour by supplying your own tag rules.
     # $processed now equals: 'i am bold'
 
     # Now, a less restrictive example:
-    use HTML::Restrict;
-
-    my $hr = HTML::Restrict->new(
+    $hr = HTML::Restrict->new(
         rules => {
             b   => [],
             img => [qw( src alt / )]
@@ -371,7 +369,7 @@ behaviour by supplying your own tag rules.
     );
 
     my $html = q[<body><b>hello</b> <img src="pic.jpg" alt="me" id="test" /></body>];
-    my $processed = $hr->process( $html );
+    $processed = $hr->process( $html );
 
     # $processed now equals: <b>hello</b> <img src="pic.jpg" alt="me" />
 
