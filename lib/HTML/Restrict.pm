@@ -98,7 +98,6 @@ has _stripper_stack => (
 );
 
 sub _build_parser {
-
     my $self  = shift;
     my $rules = shift;
 
@@ -276,11 +275,9 @@ sub _build_parser {
         ],
 
     );
-
 }
 
 sub process {
-
     my $self = shift;
 
     # returns undef if no value was passed
@@ -308,14 +305,12 @@ sub process {
     $self->_stripper_stack( [] );
 
     return $self->_processed;
-
 }
 
 # strip_enclosed_content tags could be nested in the source HTML, so we
 # maintain a stack of these tags.
 
 sub _delete_tag_from_stack {
-
     my $self        = shift;
     my $closing_tag = shift;
 
