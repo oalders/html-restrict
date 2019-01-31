@@ -29,13 +29,12 @@ matrix:
   include:
     - env: COVERAGE=1
       perl: '5.28'
-    - env: AUTHOR_TESTING=1
+    - env: AUTHOR_TESTING=1 RELEASE_TESTING=1
       perl: '5.28'
 env:
   global:
     - AUTHOR_TESTING=0
-    - AUTHOR_TESTING=1
-    - RELEASE_TESTING=1
+    - RELEASE_TESTING=0
 before_install:
   - eval $(curl https://travis-perl.github.io/init) --auto --always-upgrade-modules
   - cpanm -v Code::TidyAll Code::TidyAll::Plugin::SortLines::Naturally Perl::Tidy || true
