@@ -1,6 +1,8 @@
 Revision history for HTML-Restrict
 
 {{$NEXT}}
+        - Fix critical security issue raised in (GH#29) by Juraj Major
+        - Add max_parser_loops attribute
 
 v2.3.0    2018-02-09 16:00:41Z
         - Add code filters for attribute values (GH#27) (Graham Knop)
