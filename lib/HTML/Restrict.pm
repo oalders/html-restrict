@@ -19,31 +19,31 @@ use URI ();
 use Moo 1.002000;
 use namespace::clean;
 
-has 'allow_comments' => (
+has allow_comments => (
     is      => 'rw',
     isa     => Bool,
     default => 0,
 );
 
-has 'allow_declaration' => (
+has allow_declaration => (
     is      => 'rw',
     isa     => Bool,
     default => 0,
 );
 
-has 'debug' => (
+has debug => (
     is      => 'rw',
     isa     => Bool,
     default => 0,
 );
 
-has 'parser' => (
+has parser => (
     is      => 'ro',
     lazy    => 1,
     builder => '_build_parser',
 );
 
-has 'rules' => (
+has rules => (
     is       => 'rw',
     isa      => HashRef,
     required => 0,
@@ -53,25 +53,25 @@ has 'rules' => (
     writer   => 'set_rules',
 );
 
-has 'strip_enclosed_content' => (
+has strip_enclosed_content => (
     is      => 'rw',
     isa     => ArrayRef,
     default => sub { [ 'script', 'style' ] },
 );
 
-has 'replace_img' => (
+has replace_img => (
     is      => 'rw',
     isa     => Bool | CodeRef,
     default => 0,
 );
 
-has 'trim' => (
+has trim => (
     is      => 'rw',
     isa     => Bool,
     default => 1,
 );
 
-has 'uri_schemes' => (
+has uri_schemes => (
     is       => 'rw',
     isa      => ArrayRef,
     required => 0,
@@ -80,7 +80,7 @@ has 'uri_schemes' => (
     writer   => 'set_uri_schemes',
 );
 
-has '_processed' => (
+has _processed => (
     is  => 'rw',
     isa => quote_sub(
         q{
@@ -91,7 +91,7 @@ has '_processed' => (
     clearer => '_clear_processed',
 );
 
-has '_stripper_stack' => (
+has _stripper_stack => (
     is      => 'rw',
     isa     => ArrayRef,
     default => sub { [] },
