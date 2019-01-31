@@ -4,47 +4,51 @@ addons:
     packages:
       - aspell
       - aspell-en
-before_install:
-  - 'eval $(curl https://travis-perl.github.io/init) --auto'
-  - 'cpanm -v Code::TidyAll Code::TidyAll::Plugin::SortLines::Naturally Perl::Tidy || true'
-  - find  /home/travis/.cpanm/work | grep build.log | xargs cat
+language: perl
+perl:
+  - blead
+  - dev
+  - '5.28'
+  - '5.26'
+  - '5.24'
+  - '5.22'
+  - '5.20'
+  - '5.18'
+  - '5.16'
+  - '5.14'
+  - '5.12'
+  - '5.10'
 cache:
   directories:
     - '~/perl5'
+matrix:
+  allow_failures:
+    - perl: blead
+    - perl: dev
+  fast_finish: 1
+  include:
+    - env: COVERAGE=1
+      perl: '5.28'
+    - env: AUTHOR_TESTING=1
+      perl: '5.28'
 env:
   global:
     - AUTHOR_TESTING=0
-language: perl
-matrix:
-  allow_failures:
-    -
-      perl: blead
-    -
-      perl: dev
-  fast_finish: 'true'
-  include:
-    -
-      env: COVERAGE=1
-      perl: '5.28'
-    -
-      env: AUTHOR_TESTING=1
-      perl: '5.28'
+    - AUTHOR_TESTING=1
+    - RELEASE_TESTING=1
+before_install:
+  - eval $(curl https://travis-perl.github.io/init) --auto --always-upgrade-modules
+  - cpanm -v Code::TidyAll Code::TidyAll::Plugin::SortLines::Naturally Perl::Tidy || true
+  - find  /home/travis/.cpanm/work | grep build.log | xargs cat
 notifications:
   email:
     on_failure: always
     on_success: always
     recipients:
       - olaf@wundersolutions.com
-perl:
-  - '5.10'
-  - '5.12'
-  - '5.14'
-  - '5.16'
-  - '5.18'
-  - '5.20'
-  - '5.22'
-  - '5.24'
-  - '5.26'
-  - '5.28'
-  - blead
-  - dev
+### __app_cisetup__
+# ---
+# force_threaded_perls: 0
+# perl_caching: 1
+
+### __app_cisetup__
