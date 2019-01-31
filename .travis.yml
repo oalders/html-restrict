@@ -25,10 +25,10 @@ matrix:
   include:
     -
       env: COVERAGE=1
-      perl: '5.26'
+      perl: '5.28'
     -
       env: AUTHOR_TESTING=1
-      perl: '5.26'
+      perl: '5.28'
 notifications:
   email:
     on_failure: always
@@ -45,6 +45,7 @@ perl:
   - '5.22'
   - '5.24'
   - '5.26'
+  - '5.28'
   - blead
   - dev
 sudo: 'false'
