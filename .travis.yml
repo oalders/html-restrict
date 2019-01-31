@@ -48,4 +48,3 @@ perl:
   - '5.28'
   - blead
   - dev
-sudo: 'false'
