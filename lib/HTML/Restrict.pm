@@ -8,16 +8,22 @@ our $VERSION = 'v2.3.1';
 
 use Carp qw( croak );
 use Data::Dump qw( dump );
-use HTML::Parser ();
 use HTML::Entities qw( encode_entities );
-use Types::Standard 1.000001 qw[ ArrayRef Bool CodeRef HashRef Int ];
+use HTML::Parser ();
 use List::Util 1.33 qw( any none );
 use Scalar::Util qw( reftype weaken );
 use Sub::Quote 'quote_sub';
+use Type::Library
+    -base,
+    -declare => qw( MaxParserLoops );
+use Types::Standard 1.000001 qw( ArrayRef Bool CodeRef HashRef Int );
+use Type::Utils qw( as declare where );
 use URI ();
 
 use Moo 1.002000;
 use namespace::clean;
+
+declare MaxParserLoops, as Int, where { $_ >= 2 };
 
 has allow_comments => (
     is      => 'rw',
@@ -39,7 +45,7 @@ has debug => (
 
 has max_parser_loops => (
     is      => 'rw',
-    isa     => Int,
+    isa     => MaxParserLoops,
     default => 25,
 );
 

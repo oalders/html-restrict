@@ -39,4 +39,14 @@ my $html = '<<input>div onmouseover="alert(1);">hover over me<<input>/div>';
     is( $hr->process('<foo>bar'), 'bar', 'can parse after caught exception' );
 }
 
+{
+    for my $i ( -1 .. 1 ) {
+        like(
+            exception { HTML::Restrict->new( max_parser_loops => $i ) },
+            qr/did not pass type constraint/i,
+            'max_parser_loops cannot be ' . $i,
+        );
+    }
+}
+
 done_testing();
