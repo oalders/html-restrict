@@ -309,7 +309,7 @@ sub process {
 
         $previous_iteration = $new;
     }
-    return $self->_processed;
+    return $previous_iteration;
 }
 
 sub _process {
