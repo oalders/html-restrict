@@ -10,20 +10,21 @@ use Carp qw( croak );
 use Data::Dump qw( dump );
 use HTML::Entities qw( encode_entities );
 use HTML::Parser ();
+use HTML::Restrict::Types qw(
+    ArrayRef
+    Bool
+    CodeRef
+    HashRef
+    Int
+    MaxParserLoops
+);
 use List::Util 1.33 qw( any none );
 use Scalar::Util qw( reftype weaken );
 use Sub::Quote 'quote_sub';
-use Type::Library
-    -base,
-    -declare => qw( MaxParserLoops );
-use Types::Standard 1.000001 qw( ArrayRef Bool CodeRef HashRef Int );
-use Type::Utils qw( as declare where );
 use URI ();
 
 use Moo 1.002000;
 use namespace::clean;
-
-declare MaxParserLoops, as Int, where { $_ >= 2 };
 
 has allow_comments => (
     is      => 'rw',
@@ -623,8 +624,9 @@ exception will be thrown.  Returning partially cleaned text would be wrong, as
 would be returning C<undef> or an empty string.  Throwing an exception forces
 the user to choose the appropriate way of dealing with this.
 
-If you choose to set this value, please note that it can be no less than 2,
-or the parser will never be able to make a comparison with a previous value.
+If you choose to set this value, please note that it can be no less than 2, or
+the parser will never be able to make a comparison with a previous value.  An
+exception will be thrown if you attempt to set this to a value less than 2.
 
 =item * replace_img => [0|1|CodeRef]
 
