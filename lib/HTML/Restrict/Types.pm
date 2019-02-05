@@ -1,5 +1,5 @@
 package HTML::Restrict::Types;
-
+our $VERSION = 'v2.4.1';
 use strict;
 use warnings;
 
