@@ -36,8 +36,6 @@ env:
     - RELEASE_TESTING=0
 before_install:
   - eval $(curl https://travis-perl.github.io/init) --auto --always-upgrade-modules
-  - cpanm -v Code::TidyAll Code::TidyAll::Plugin::SortLines::Naturally Perl::Tidy || true
-  - find  /home/travis/.cpanm/work | grep build.log | xargs cat
 notifications:
   email:
     on_failure: always
