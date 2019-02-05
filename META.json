@@ -62,7 +62,8 @@
             "Scalar::Util" : "0",
             "Sub::Quote" : "0",
             "Type::Library" : "0",
-            "Type::Utils" : "1.000001",
+            "Type::Tiny" : "1.002001",
+            "Type::Utils" : "0",
             "URI" : "0",
             "namespace::clean" : "0",
             "perl" : "5.006",
@@ -96,7 +97,7 @@
          "web" : "https://github.com/oalders/html-restrict"
       }
    },
-   "version" : "v2.4.0",
+   "version" : "v2.4.1",
    "x_Dist_Zilla" : {
       "perl" : {
          "version" : "5.026001"
@@ -628,7 +629,7 @@
                   "branch" : null,
                   "changelog" : "Changes",
                   "signed" : 0,
-                  "tag" : "vv2.4.0",
+                  "tag" : "vv2.4.1",
                   "tag_format" : "v%v",
                   "tag_message" : "v%v"
                },
@@ -709,6 +710,17 @@
             },
             "name" : "@Author::OALDERS/Git::Push",
             "version" : "2.045"
+         },
+         {
+            "class" : "Dist::Zilla::Plugin::Prereqs",
+            "config" : {
+               "Dist::Zilla::Plugin::Prereqs" : {
+                  "phase" : "runtime",
+                  "type" : "requires"
+               }
+            },
+            "name" : "Prereqs",
+            "version" : "6.012"
          },
          {
             "class" : "Dist::Zilla::Plugin::FinderCode",
