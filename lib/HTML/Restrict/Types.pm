@@ -19,3 +19,7 @@ __PACKAGE__->add_type(
 );
 
 1;
+
+__END__
+
+# ABSTRACT: Type library for HTML::Restrict
