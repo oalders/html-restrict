@@ -1,5 +1,7 @@
 Revision history for HTML-Restrict
 
+{{$NEXT}}
+
 v2.4.1    2019-02-05 14:13:16Z
         - Bump version of Type::Tiny to 1.002001. (GH#33) (Olaf Alders).  Issue
           reported by Slaven Rezić (GH#32).
