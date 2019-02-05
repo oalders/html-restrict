@@ -7,6 +7,7 @@ requires "Moo" => "1.002000";
 requires "Scalar::Util" => "0";
 requires "Sub::Quote" => "0";
 requires "Type::Library" => "0";
+requires "Type::Tiny" => "1.002001";
 requires "Type::Utils" => "1.000001";
 requires "URI" => "0";
 requires "namespace::clean" => "0";

@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Type::Library -base;
-use Type::Utils 1.000001 ();
+use Type::Utils ();
 
 BEGIN {
     Type::Utils::extends( 'Types::Common::Numeric', 'Types::Standard', );
