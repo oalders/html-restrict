@@ -19,7 +19,7 @@ use warnings;
 use Browser::Open qw( open_browser );
 use Data::BLNS qw( get_naughty_strings );
 use HTML::Restrict ();
-use Path::Tiny ();
+use Path::Tiny     ();
 
 my $hr = HTML::Restrict->new;
 
