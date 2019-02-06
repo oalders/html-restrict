@@ -3,15 +3,16 @@
 use strict;
 use warnings;
 
-use File::Slurp;
-use HTML::Restrict;
+use HTML::Restrict ();
+use Path::Tiny qw( path );
 
 my $filename = shift @ARGV;
 die "usage: perl $0 path/to/file > path/to/new/file" if !$filename;
 
-my $text = read_file($filename);
+my $text = path($filename)->slurp;
 
 my $hr = HTML::Restrict->new;
+
 print $hr->process($text);
 
 =pod
