@@ -156,11 +156,11 @@ sub _build_parser {
                             if ( defined $uri->scheme ) {
                                 delete $attr->{$source_type}
                                     if none { $_ eq $uri->scheme }
-                                grep defined, @{ $self->get_uri_schemes };
+                                grep { defined } @{ $self->get_uri_schemes };
                             }
                             else {    # relative uri
                                 delete $attr->{$source_type}
-                                    unless grep !defined,
+                                    unless grep { !defined }
                                     @{ $self->get_uri_schemes };
                             }
                         }
