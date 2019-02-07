@@ -138,6 +138,7 @@ sub _build_parser {
 
     weaken($self);
     return HTML::Parser->new(
+        empty_element_tags => 1,
 
         start_h => [
             sub {
