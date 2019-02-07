@@ -151,14 +151,32 @@ sub _build_parser {
 
                     foreach my $source_type ( 'href', 'src', 'cite' ) {
 
-                        if ( $attr->{$source_type} ) {
-                            my $uri = URI->new( $attr->{$source_type} );
-                            if ( defined $uri->scheme ) {
+                        my $link = $attr->{$source_type};
+
+                        # Remove unprintable ASCII control characters, which
+                        # are 1..8 and 14..31. These characters are not valid
+                        # in URLs, but they can prevent the URI parser from
+                        # recognizing the scheme when they are used as leading
+                        # characters.  Browsers will helpfully ignore them,
+                        # meaning that these characters can be used to defeat
+                        # HTML::Restrict when used as leading characters in a
+                        # link.  In our case we will strip them all regardless
+                        # of where they are in the URL. See
+                        # https://github.com/oalders/html-restrict/issues/30
+
+                        if ($link) {
+                            $link =~ s/[\001-\010]/ /g;    # decimal 1..8
+                            $link =~ s/[\016-\037]/ /g;    # decimal 14..31
+                        }
+
+                        if ($link) {
+                            my $url = URI->new($link);
+                            if ( defined $url->scheme ) {
                                 delete $attr->{$source_type}
-                                    if none { $_ eq $uri->scheme }
+                                    if none { $_ eq $url->scheme }
                                 grep { defined } @{ $self->get_uri_schemes };
                             }
-                            else {    # relative uri
+                            else {                         # relative URL
                                 delete $attr->{$source_type}
                                     unless grep { !defined }
                                     @{ $self->get_uri_schemes };
