@@ -163,20 +163,24 @@ sub _build_parser {
                         # link.  In our case we will strip them all regardless
                         # of where they are in the URL. See
                         # https://github.com/oalders/html-restrict/issues/30
+                        # https://url.spec.whatwg.org/
+                        # https://infra.spec.whatwg.org/#c0-control
 
                         if ($link) {
-                            $link =~ s/[\001-\010]/ /g;    # decimal 1..8
-                            $link =~ s/[\016-\037]/ /g;    # decimal 14..31
-                        }
+                            $link =~ s/[\00-\037]/ /g
+                                ;    # decimal 0..31 C0 control chars
+                            my $url = URI->new($link)->as_string;
 
-                        if ($link) {
-                            my $url = URI->new($link);
+                            # The above regex doesn't strip the null byte
+                            $url =~ s{&#0;}{}g;
+
+                            $url = URI->new($url);
                             if ( defined $url->scheme ) {
                                 delete $attr->{$source_type}
                                     if none { $_ eq $url->scheme }
                                 grep { defined } @{ $self->get_uri_schemes };
                             }
-                            else {                         # relative URL
+                            else {    # relative URL
                                 delete $attr->{$source_type}
                                     unless grep { !defined }
                                     @{ $self->get_uri_schemes };

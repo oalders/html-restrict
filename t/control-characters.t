@@ -5,12 +5,12 @@ use Test::More;
 
 use HTML::Restrict ();
 
-my $r = new HTML::Restrict(
+my $r = HTML::Restrict->new(
     rules       => { a => ['href'] },
     uri_schemes => [undef],
 );
 
-for my $i ( 1 .. 8, 14 .. 31 ) {
+for my $i ( 0 .. 31 ) {
     my $url = "&#$i;javascript:alert(1);";
 
     {
