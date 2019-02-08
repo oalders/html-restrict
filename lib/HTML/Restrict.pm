@@ -171,14 +171,9 @@ sub _build_parser {
 
                             # C0 control chars (decimal 0..31)
                             # sort of like $link =~ s/[[:^print:]]//g
-                            $link =~ s/[\00-\037]/ /g;
+                            $link =~ s/[\00-\037]|&#x?0+;/ /g;
 
-                            my $url = URI->new($link)->as_string;
-
-                            ## The above regex doesn't strip the null byte
-                            $url =~ s{&#x?0+;}{}g;
-
-                            $url = URI->new($url);
+                            my $url = URI->new($link);
                             if ( defined $url->scheme ) {
                                 delete $attr->{$source_type}
                                     if none { $_ eq $url->scheme }
