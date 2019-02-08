@@ -176,7 +176,7 @@ sub _build_parser {
                             my $url = URI->new($link)->as_string;
 
                             ## The above regex doesn't strip the null byte
-                            $url =~ s{&#(?:x?)0+;}{}g;
+                            $url =~ s{&#x?0+;}{}g;
 
                             $url = URI->new($url);
                             if ( defined $url->scheme ) {
