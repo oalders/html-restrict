@@ -154,14 +154,15 @@ sub _build_parser {
                         my $link = $attr->{$source_type};
 
                         # Remove unprintable ASCII control characters, which
-                        # are 1..8 and 14..31. These characters are not valid
-                        # in URLs, but they can prevent the URI parser from
-                        # recognizing the scheme when they are used as leading
-                        # characters.  Browsers will helpfully ignore them,
-                        # meaning that these characters can be used to defeat
-                        # HTML::Restrict when used as leading characters in a
-                        # link.  In our case we will strip them all regardless
-                        # of where they are in the URL. See
+                        # are 0..31. These characters are not valid in URLs,
+                        # but they can prevent the URI parser from recognizing
+                        # the scheme when they are used as leading characters.
+                        # Browsers will helpfully ignore some of them, meaning
+                        # that some of these characters (particularly 1..8 and
+                        # 14..31) can be used to defeat HTML::Restrict when
+                        # used as leading characters in a link.  In our case we
+                        # will strip them all regardless of where they are in
+                        # the URL. See
                         # https://github.com/oalders/html-restrict/issues/30
                         # https://url.spec.whatwg.org/
                         # https://infra.spec.whatwg.org/#c0-control
