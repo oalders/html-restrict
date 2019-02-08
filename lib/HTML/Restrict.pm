@@ -168,12 +168,15 @@ sub _build_parser {
                         # https://infra.spec.whatwg.org/#c0-control
 
                         if ($link) {
-                            $link =~ s/[\00-\037]/ /g
-                                ;    # decimal 0..31 C0 control chars
+
+                            # C0 control chars (decimal 0..31)
+                            # sort of like $link =~ s/[[:^print:]]//g
+                            $link =~ s/[\00-\037]/ /g;
+
                             my $url = URI->new($link)->as_string;
 
-                            # The above regex doesn't strip the null byte
-                            $url =~ s{&#0;}{}g;
+                            ## The above regex doesn't strip the null byte
+                            $url =~ s{&#(?:x?)0+;}{}g;
 
                             $url = URI->new($url);
                             if ( defined $url->scheme ) {
