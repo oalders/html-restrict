@@ -1,5 +1,7 @@
 Revision history for HTML-Restrict
 
+{{$NEXT}}
+
 v2.5.0    2019-02-08 22:18:11Z
         - Strip some control characters from links (GH#34) (Olaf Alders)
         - Enable empty_element_tags in HTML::Parser (GH#35) (Olaf Alders)
