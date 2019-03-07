@@ -267,6 +267,7 @@ sub _build_parser {
             sub {
                 my ( $p, $text ) = @_;
                 print "text: $text\n" if $self->debug;
+                $text = _fix_text_encoding($text);
                 if ( !@{ $self->_stripper_stack } ) {
                     $self->_processed( ( $self->_processed || q{} ) . $text );
                 }
@@ -350,6 +351,39 @@ sub _delete_tag_from_stack {
     $self->_stripper_stack( [ reverse @tag_list ] );
 
     return;
+}
+
+# regex for entities that don't require a terminating semicolon
+my ($short_entity_re)
+    = map qr/$_/i,
+    join '|',
+    '#x[0-9a-f]+',
+    '#[0-9]+',
+    grep !/;\z/,
+    sort keys %HTML::Entities::entity2char;
+
+# semicolon required
+my ($complete_entity_re)
+    = map qr/$_/i,
+    join '|',
+    grep /;\z/,
+    sort keys %HTML::Entities::entity2char;
+
+sub _fix_text_encoding {
+    my $text = shift;
+    $text =~ s{
+        &
+        (?:
+          ($short_entity_re);?
+        |
+          ($complete_entity_re)
+        )?
+    }{
+          defined $1  ? "&$1;"
+        : defined $2  ? "&$2"
+                      : "&amp;"
+    }xgie;
+    return encode_entities( $text, '<>' );
 }
 
 1;    # End of HTML::Restrict
