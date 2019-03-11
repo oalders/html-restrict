@@ -4,7 +4,7 @@ use 5.006;
 package HTML::Restrict;
 
 use version;
-our $VERSION = 'v2.4.2';
+our $VERSION = 'v3.0.1';
 
 use Carp qw( croak );
 use Data::Dump qw( dump );
