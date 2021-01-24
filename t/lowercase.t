@@ -4,8 +4,8 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Fatal;
-use HTML::Restrict;
+use Test::Fatal qw( exception );
+use HTML::Restrict ();
 
 my $html
     = q[<!doctype html><!-- comments go here --><body onLoad="stuff">foo</body>];

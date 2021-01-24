@@ -1,13 +1,11 @@
 #!perl
 
-use Test::More;
-
 use strict;
 use warnings;
 
-use Data::Dump;
-use HTML::Restrict;
-use Scalar::Util;
+use HTML::Restrict ();
+use Scalar::Util ();
+use Test::More;
 
 my $version = $HTML::Restrict::VERSION || 'development';
 diag( "Testing HTML::Restrict $version, Perl $], $^X" );
