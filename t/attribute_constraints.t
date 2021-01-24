@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use HTML::Restrict;
+use HTML::Restrict ();
 
 my $hr = HTML::Restrict->new(
     rules => {
