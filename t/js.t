@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use HTML::Restrict ();
-use Scalar::Util ();
+use Scalar::Util   ();
 use Test::More;
 
 my $hr = HTML::Restrict->new( debug => 0 );

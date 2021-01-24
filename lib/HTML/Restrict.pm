@@ -304,7 +304,7 @@ sub process {
     my $self = shift;
 
     # returns undef if no value was passed
-    return if !@_;
+    return       if !@_;
     return $_[0] if !$_[0];
 
     my ($content) = @_;
