@@ -1,10 +1,10 @@
 use strict;
 use warnings;
 
-use Test::Fatal qw( exception );
+use Test::Fatal ();
 use Test::More;
 
-use HTML::Restrict;
+use HTML::Restrict ();
 
 # Behaviour as of 2.3.0 is for
 # <<input>div onmouseover="alert(1);">hover over me<<input>/div>

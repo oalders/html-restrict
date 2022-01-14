@@ -3,8 +3,8 @@
 use strict;
 use warnings;
 
-use HTML::Restrict;
-use Scalar::Util;
+use HTML::Restrict ();
+use Scalar::Util   ();
 use Test::More;
 
 my @texts = (
@@ -14,7 +14,7 @@ my @texts = (
     },
     {
         label => '<img ... ></img>',
-        html => '<img alt="foo bar" src="http://example.com/foo.jpg"></img>',
+        html  => '<img alt="foo bar" src="http://example.com/foo.jpg"></img>',
     },
 );
 
