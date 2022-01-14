@@ -15,10 +15,10 @@ $(document).ready(function() {
 });
 </script>];
 
-is( $hr->process($html), undef, "content of script tags removed by default" );
+is( $hr->process($html), undef, 'content of script tags removed by default' );
 
 $hr->set_rules( { script => ['type'] } );
 
-is( $hr->process($html), $html, "content of script preserved" );
+is( $hr->process($html), $html, 'content of script preserved' );
 
 done_testing();

@@ -106,7 +106,7 @@ sub _build_parser {
     if ($rules) {
         foreach my $tag_name ( keys %{$rules} ) {
             if ( lc $tag_name ne $tag_name ) {
-                croak "All tag names must be lower cased";
+                croak 'All tag names must be lower cased';
             }
             if ( reftype $rules->{$tag_name} eq 'ARRAY' ) {
                 my @attr_names;
@@ -116,7 +116,7 @@ sub _build_parser {
                         : push( @attr_names, $attr_item );
                 }
                 for (@attr_names) {
-                    croak "All attribute names must be lower cased"
+                    croak 'All attribute names must be lower cased'
                         if lc $_ ne $_;
                 }
             }
@@ -208,13 +208,13 @@ sub _build_parser {
                                 my $value
                                     = encode_entities( $attr->{$attr_name} );
                                 $more .= qq[ $attr_name="$value" ]
-                                    unless $attr_name eq q{/};
+                                    unless $attr_name eq '/';
                             }
                         }
                     }
 
                     # closing slash should (naturally) close the tag
-                    if ( exists $attr->{q{/}} && $attr->{q{/}} eq q{/} ) {
+                    if ( exists $attr->{'/'} && $attr->{'/'} eq '/' ) {
                         $more .= ' /';
                     }
 
@@ -245,7 +245,7 @@ sub _build_parser {
                 }
 
             },
-            "self,tagname,attr,text"
+            'self,tagname,attr,text'
         ],
 
         end_h => [
@@ -260,7 +260,7 @@ sub _build_parser {
                 }
 
             },
-            "self,tagname,attr,text"
+            'self,tagname,attr,text'
         ],
 
         text_h => [
@@ -272,7 +272,7 @@ sub _build_parser {
                     $self->_processed( ( $self->_processed || q{} ) . $text );
                 }
             },
-            "self,text"
+            'self,text'
         ],
 
         comment_h => [
@@ -283,7 +283,7 @@ sub _build_parser {
                     $self->_processed( ( $self->_processed || q{} ) . $text );
                 }
             },
-            "self,text"
+            'self,text'
         ],
 
         declaration_h => [
@@ -294,7 +294,7 @@ sub _build_parser {
                     $self->_processed( ( $self->_processed || q{} ) . $text );
                 }
             },
-            "self,text"
+            'self,text'
         ],
 
     );
