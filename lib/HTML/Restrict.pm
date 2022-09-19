@@ -71,9 +71,9 @@ has trim => (
     default => 1,
 );
 
-has process_text => (
+has filter_text => (
     is      => 'rw',
-    isa     => Bool,
+    isa     => Bool | CodeRef,
     default => 1,
 );
 
@@ -273,7 +273,13 @@ sub _build_parser {
             sub {
                 my ( $p, $text ) = @_;
                 print "text: $text\n" if $self->debug;
-                $text = _fix_text_encoding($text) unless !$self->process_text;
+                if ( ref $self->filter_text ) {
+                    $text = $self->filter_text->( $text );
+                }
+                elsif ($self->filter_text)
+                {
+                    $text = _fix_text_encoding($text);
+                }
                 if ( !@{ $self->_stripper_stack } ) {
                     $self->_processed( ( $self->_processed || q{} ) . $text );
                 }
@@ -677,6 +683,10 @@ Keep in mind that changes to strip_enclosed_content are not additive, so if you
 are adding additional tags you'll need to include the entire list of tags whose
 enclosed content you'd like to remove.  This feature strips script and style
 tags by default.
+
+=item * C<< filter_text => [0|1|CodeRef] >>
+
+By default all text will be processed.  Set this value to 0 in order to disable this behaviour.  Please be advised this is a security risk. Use caution when disabling this parameter.
 
 =back
 
