@@ -283,6 +283,11 @@ HTML::Restrict recognizes:
     enclosed content you'd like to remove.  This feature strips script and style
     tags by default.
 
+- 'process_text => [0|1]'
+
+    By default all text will be processed.  Set this value to 0 in order to disable this behaviour.
+
+
 # SUBROUTINES/METHODS
 
 ## process( $html )

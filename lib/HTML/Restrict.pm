@@ -71,6 +71,12 @@ has trim => (
     default => 1,
 );
 
+has process_text => (
+    is      => 'rw',
+    isa     => Bool,
+    default => 1,
+);
+
 has uri_schemes => (
     is       => 'rw',
     isa      => ArrayRef,
@@ -267,7 +273,7 @@ sub _build_parser {
             sub {
                 my ( $p, $text ) = @_;
                 print "text: $text\n" if $self->debug;
-                $text = _fix_text_encoding($text);
+                $text = _fix_text_encoding($text) unless !$self->process_text;
                 if ( !@{ $self->_stripper_stack } ) {
                     $self->_processed( ( $self->_processed || q{} ) . $text );
                 }
