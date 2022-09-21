@@ -1,7 +1,6 @@
 use strict;
 use warnings;
 
-use Test::Fatal ();
 use Test::More;
 
 use HTML::Restrict ();

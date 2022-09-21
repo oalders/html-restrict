@@ -4,7 +4,6 @@ use strict;
 use warnings;
 
 use HTML::Restrict ();
-use Scalar::Util   ();
 use Test::More;
 
 my @texts = (
