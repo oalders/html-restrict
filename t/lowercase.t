@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Fatal qw( exception );
+use Test::Fatal    qw( exception );
 use HTML::Restrict ();
 
 my $html
