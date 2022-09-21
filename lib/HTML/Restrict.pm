@@ -6,15 +6,15 @@ package HTML::Restrict;
 use version;
 our $VERSION = 'v3.0.1';
 
-use Carp qw( croak );
-use Data::Dump qw( dump );
-use HTML::Parser ();
-use HTML::Entities qw( encode_entities );
+use Carp                     qw( croak );
+use Data::Dump               qw( dump );
+use HTML::Parser             ();
+use HTML::Entities           qw( encode_entities );
 use Types::Standard 1.000001 qw[ Bool HashRef ArrayRef CodeRef ];
-use List::Util 1.33 qw( any none );
-use Scalar::Util qw( reftype weaken );
-use Sub::Quote qw( quote_sub );
-use URI ();
+use List::Util 1.33          qw( any none );
+use Scalar::Util             qw( reftype weaken );
+use Sub::Quote               qw( quote_sub );
+use URI                      ();
 
 use Moo 1.002000;
 use namespace::clean;
@@ -164,7 +164,8 @@ sub _build_parser {
                             if ( defined $url->scheme ) {
                                 delete $attr->{$source_type}
                                     if none { $_ eq $url->scheme }
-                                grep { defined } @{ $self->get_uri_schemes };
+                                    grep { defined }
+                                    @{ $self->get_uri_schemes };
                             }
                             else {    # relative URL
                                 delete $attr->{$source_type}
@@ -236,10 +237,8 @@ sub _build_parser {
                     }
                     $self->_processed( ( $self->_processed || q{} ) . $alt );
                 }
-                elsif (
-                    any { $_ eq $tagname }
-                    @{ $self->strip_enclosed_content }
-                ) {
+                elsif ( any { $_ eq $tagname }
+                    @{ $self->strip_enclosed_content } ) {
                     print "adding $tagname to strippers" if $self->debug;
                     push @{ $self->_stripper_stack }, $tagname;
                 }
