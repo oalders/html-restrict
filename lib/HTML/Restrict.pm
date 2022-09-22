@@ -684,7 +684,21 @@ tags by default.
 
 =item * C<< filter_text => [0|1|CodeRef] >>
 
-By default all text will be processed.  Set this value to 0 in order to disable this behaviour.  Please be advised this is a security risk. Use caution when disabling this parameter.
+By default all text will be filtered to fix any encoding problems which may
+cause security issues. You may override the encoding behaviour by providing
+your own anonymous sub to C<filter_text>. This first and only argument to the
+sub is the text which needs to be filtered. The sub should return a scalar
+containing the transformed text.
+
+    filter_text => sub {
+        my $text = shift;
+        ... # transform text
+        return $text;
+    },
+
+You may also this value to 0 in order to disable this behaviour entirely.
+Please be advised this is a security risk. Use caution when disabling this
+parameter or providing your own filter function.
 
 =back
 
