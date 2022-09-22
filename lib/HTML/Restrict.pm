@@ -47,7 +47,7 @@ has rules => (
     is       => 'rw',
     isa      => HashRef,
     required => 0,
-    default  => quote_sub(q{ {} }),
+    default  => quote_sub(' {} '),
     trigger  => \&_build_parser,
     reader   => 'get_rules',
     writer   => 'set_rules',
@@ -206,7 +206,7 @@ sub _build_parser {
                                     next;
                                 }
                                 $more .= qq[ $attr_name="]
-                                    . encode_entities($value) . q["];
+                                    . encode_entities($value) . q{"};
                             }
                         }
                         else {
@@ -238,7 +238,9 @@ sub _build_parser {
                     }
                     else {
                         $alt
-                            = defined( $attr->{alt} ) ? ": $attr->{alt}" : "";
+                            = defined( $attr->{alt} )
+                            ? ": $attr->{alt}"
+                            : q{};
                         $alt = "[IMAGE$alt]";
                     }
                     $self->_processed( ( $self->_processed || q{} ) . $alt );
