@@ -758,26 +758,6 @@ L<HTML::Detoxifier>, HTML::Sanitizer, L<HTML::Scrubber>
 Thanks to Raybec Communications L<http://www.raybec.com> for funding my
 work on this module and for releasing it to the world.
 
-Thanks also to the following for patches, bug reports and assistance:
-
-Mark Jubenville (ioncache)
-
-Duncan Forsyth
-
-Rick Moore
-
-Arthur Axel 'fREW' Schmidt
-
-perlpong
-
-David Golden
-
-Graham TerMarsch
-
-Dagfinn Ilmari Mannsåker
-
-Graham Knop
-
-Carwyn Ellis
+Thanks also to the many other contributors. L<https://github.com/oalders/html-restrict/graphs/contributors>
 
 =cut
