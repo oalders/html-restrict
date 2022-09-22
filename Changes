@@ -1,6 +1,8 @@
 Revision history for HTML-Restrict
 
 {{$NEXT}}
+        - Add a filter_text attribute. This can be used to disable text
+          encoding. (GH#44) (ccottingham-presinet)
 
 v3.0.0    2019-03-11 13:52:08Z
         - Better fix for handling malformed tags. Removes max_parser_loops(),
