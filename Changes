@@ -1,5 +1,7 @@
 Revision history for HTML-Restrict
 
+{{$NEXT}}
+
 v3.0.1    2022-09-22 22:27:40Z
         - Add a filter_text attribute. This can be used to disable text
           encoding. (GH#44) (ccottingham-presinet)
