@@ -8,7 +8,7 @@ use Test::Fatal    qw( exception );
 use HTML::Restrict ();
 
 my $html
-    = q[<!doctype html><!-- comments go here --><body onLoad="stuff">foo</body>];
+    = q{<!doctype html><!-- comments go here --><body onLoad="stuff">foo</body>};
 
 like(
     exception {

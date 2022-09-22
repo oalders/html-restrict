@@ -11,7 +11,7 @@ my $hr_no_processing = HTML::Restrict->new( debug => 0, filter_text => 0 );
 my $hr_code_ref
     = HTML::Restrict->new( debug => 0, filter_text => \&code_ref );
 
-my $string = "Terms & Conditions";
+my $string = 'Terms & Conditions';
 my $html   = "<h2>$string</h2>";
 
 #plain text tests
@@ -41,5 +41,5 @@ done_testing();
 
 sub code_ref {
     my $text = shift @_;
-    return "foobarbat " . $text;
+    return 'foobarbat ' . $text;
 }

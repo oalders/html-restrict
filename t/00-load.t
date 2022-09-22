@@ -39,22 +39,22 @@ cmp_ok( $processed, 'eq', $bold, 'b tag not stripped' );
 # ensure allowed tags aren't stripped and others are removed
 $hr->set_rules( { a => [qw( href target )] } );
 my $link
-    = '<center><a href="http://google.com" target="_blank" id="test">google</a></center>';
+    = q{<center><a href="http://google.com" target="_blank" id="test">google</a></center>};
 my $processed_link = $hr->process( $link );
 cmp_ok(
     $processed_link, 'eq',
-    '<a href="http://google.com" target="_blank">google</a>',
+    q{<a href="http://google.com" target="_blank">google</a>},
     'allowed link but not center tag',
 );
 
 # ensure closing slash is maintained for tags
 # with no end tag
 $hr->set_rules( { img => [qw( src width height /)] } );
-my $img = '<body><img src="/face.jpg" width="10" height="10" /></body>';
+my $img = q{<body><img src="/face.jpg" width="10" height="10" /></body>};
 my $processed_img = $hr->process( $img );
 cmp_ok(
     $processed_img, 'eq',
-    '<img src="/face.jpg" width="10" height="10">',
+    q{<img src="/face.jpg" width="10" height="10">},
     'closing slash preserved in image'
 );
 
@@ -69,7 +69,7 @@ cmp_ok( $hr->process( '<!-- comment this -->ok' ),
 # stripping of javascript includes
 cmp_ok(
     $hr->process(
-        '<script type="text/javascript" src="/js/jquery-1.3.2.js"></script>ok'
+        q{<script type="text/javascript" src="/js/jquery-1.3.2.js"></script>ok}
     ),
     'eq', 'ok',
     'javascript includes are stripped'
@@ -78,7 +78,7 @@ cmp_ok(
 # stripping of css includes
 cmp_ok(
     $hr->process(
-        '<link href="/style.css" media="screen" rel="stylesheet" type="text/css" />ok'
+        q{<link href="/style.css" media="screen" rel="stylesheet" type="text/css" />ok}
     ),
     'eq', 'ok',
     'css includes are stripped'
@@ -112,7 +112,7 @@ ok( !$hr->process('<html>'), 'process only HTML' );
 # bugfix: check URI scheme for "src" attributes
 $hr = HTML::Restrict->new( rules => { img => [qw( src )] } );
 $hr->set_uri_schemes( [ undef, 'http', 'https' ] );
-cmp_ok( $hr->process('<img src="file:/some/file">'), 'eq', '<img>' );
+cmp_ok( $hr->process(q{<img src="file:/some/file">}), 'eq', '<img>' );
 
 # bugfix: ensure stripper stack is reset in case of broken html
 $hr = HTML::Restrict->new;

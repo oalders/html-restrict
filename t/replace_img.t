@@ -9,11 +9,11 @@ use Test::More;
 my @texts = (
     {
         label => '<img ... />',
-        html  => '<img alt="foo bar" src="http://example.com/foo.jpg" />',
+        html  => q{<img alt="foo bar" src="http://example.com/foo.jpg" />},
     },
     {
         label => '<img ... ></img>',
-        html  => '<img alt="foo bar" src="http://example.com/foo.jpg"></img>',
+        html => q{<img alt="foo bar" src="http://example.com/foo.jpg"></img>},
     },
 );
 
