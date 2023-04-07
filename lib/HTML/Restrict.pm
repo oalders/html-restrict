@@ -251,10 +251,10 @@ sub _build_parser {
                     }
                     $self->_processed( ( $self->_processed || q{} ) . $alt );
                 }
-                elsif ( $tagname eq 'br' && $self->create_newlines) {
+                elsif ( $tagname eq 'br' && $self->create_newlines ) {
                     $self->_processed( ( $self->_processed || "" ) . "\n" );
                 }
-                elsif ( $tagname eq 'p' && $self->create_newlines) {
+                elsif ( $tagname eq 'p' && $self->create_newlines ) {
                     $self->_processed( ( $self->_processed || "" ) . "\n\n" );
                 }
                 elsif ( any { $_ eq $tagname }
