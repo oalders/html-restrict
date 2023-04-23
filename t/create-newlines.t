@@ -1,9 +1,10 @@
 #!/usr/bin/env perl
+
 use strict;
 use warnings;
 
-use Test::More;
 use HTML::Restrict ();
+use Test::More;
 
 my $hr = HTML::Restrict->new();
 
