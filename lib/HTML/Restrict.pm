@@ -255,7 +255,8 @@ sub _build_parser {
                     $self->_processed( ( $self->_processed || q{} ) . "\n" );
                 }
                 elsif ( $tagname eq 'p' && $self->create_newlines ) {
-                    $self->_processed( ( $self->_processed || q{} ) . "\n\n" );
+                    $self->_processed(
+                        ( $self->_processed || q{} ) . "\n\n" );
                 }
                 elsif ( any { $_ eq $tagname }
                     @{ $self->strip_enclosed_content } ) {
