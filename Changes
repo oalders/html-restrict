@@ -1,6 +1,6 @@
 Revision history for HTML-Restrict
 
-{{$NEXT}}
+v3.0.2    2023-04-23 17:06:28Z
         - Add create_newlines to replace BR and P by 1, resp. 2 newlines
           (GH#46) (E. Choroba)
 
