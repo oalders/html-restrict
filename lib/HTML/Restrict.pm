@@ -31,6 +31,12 @@ has allow_declaration => (
     default => 0,
 );
 
+has create_newlines => (
+    is      => 'rw',
+    isa     => Bool,
+    default => 0,
+);
+
 has debug => (
     is      => 'rw',
     isa     => Bool,
@@ -244,6 +250,12 @@ sub _build_parser {
                         $alt = "[IMAGE$alt]";
                     }
                     $self->_processed( ( $self->_processed || q{} ) . $alt );
+                }
+                elsif ( $tagname eq 'br' && $self->create_newlines ) {
+                    $self->_processed( ( $self->_processed || "" ) . "\n" );
+                }
+                elsif ( $tagname eq 'p' && $self->create_newlines ) {
+                    $self->_processed( ( $self->_processed || "" ) . "\n\n" );
                 }
                 elsif ( any { $_ eq $tagname }
                     @{ $self->strip_enclosed_content } ) {
@@ -635,6 +647,12 @@ feature is off by default.
     my $hr = HTML::Restrict->new( allow_comments => 1 );
     $html = $hr->process( $html );
     # $html is now: "<!-- comments! -->foo"
+
+=item * create_newlines => [0|1]
+
+Set the value to true if you'd like to have each br tag replaced by a
+newline and every p tag replaced by two newlines. If a tag is
+specified in the allowed HTML, it won't be replaced.
 
 =item * replace_img => [0|1|CodeRef]
 
