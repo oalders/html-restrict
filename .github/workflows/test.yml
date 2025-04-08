@@ -135,7 +135,6 @@ jobs:
       matrix:
         os: [windows-latest]
         perl-version:
-          - "5.16"
           - "5.18"
           - "5.20"
           - "5.22"
